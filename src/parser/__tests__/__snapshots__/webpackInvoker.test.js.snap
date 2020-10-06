@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`webpack invoker happy path for react two components and json 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <h1>
+      Hello CodeSandbox
+    </h1>
+    <h2>
+      Start editing to see some magic happen!
+    </h2>
+    <div>
+      here, some more magic
+    </div>
+  </div>
+</div>
+`;
