@@ -25,7 +25,7 @@ cases(
         const { exports } = jsInvoke(await render(entry));
 
         const Component = exports.default;
-        debugger;
+        // debugger;
 
         const { container } = testRender(<Component />);
 

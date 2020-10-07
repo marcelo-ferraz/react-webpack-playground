@@ -1,5 +1,5 @@
 export default {
-    'app.js': `
+    './app.js': `
 import React from "react";
 import Component2 from "./component-2";
 
@@ -12,20 +12,23 @@ export default function App() {
         </div>
     );
 }`,
-    'component-2.js': `
+    './component-2.js': `
 import React from "react";
 import data from "./someData.json";
 
 export default function Component2() {
-    return (
+    return (<>
         <div>
-            here, some more magic
-            {JSON.stringify(data)}
+            here, some more magic,
         </div>
+        <div>
+            and here some json: {JSON.stringify(data)}
+        </div>
+        </>
     );
 }
     `,
-    'someData.json': `{
+    './someData.json': `{
     "id": 42,
     "hash": "82d06ce0-e19d-4942-853a-4c74d4ae883e"
 }`,

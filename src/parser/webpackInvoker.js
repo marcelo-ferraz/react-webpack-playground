@@ -5,13 +5,19 @@ import { js, json, jsx } from '../fileExtensions';
 import { isItMeaningful } from './helpers';
 import { resolve } from './helpers';
 
+const findByPath = (obj, path) =>
+    find(
+        Object.entries(obj),
+        ([key]) => key === path || key === `${path}.js` || key === `${path}/index.js`,
+    ) || [];
+
 const emptyFunc = function () {
     // eslint-disable-next-line no-useless-return
     return;
 };
 
 function reduceAllImports(code, whenFound) {
-    const findImports = /__customRequire\(\\?("|')\.\/(?<importId>[\w-\.\s]+)\\?("|')/gm;
+    const findImports = /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w-\.\s\/]+)\\?("|')/gm;
 
     let match;
     do {
@@ -19,32 +25,26 @@ function reduceAllImports(code, whenFound) {
 
         if (match && match.groups) {
             const { importId } = match.groups;
-            const ext = extname(importId);
-            whenFound(importId.replace(ext, ''), ext || '.js');
+            whenFound(importId);
         }
     } while (match);
 }
 
-export async function render(entries) {
-    let importList = {};
+export async function render(entries, entryPath = null) {
+    let allDependencies = {};
+    let loadingDependencies = {};
 
     // eslint-disable-next-line no-unused-vars, no-underscore-dangle
     const __customRequire = (path) => {
-        const keyFound = find(
-            Object.keys(importList),
-            (key) =>
-                `./${key}` === path ||
-                `./${key}` === `${path}.js` ||
-                `./${key}` === `${path}/index.js`,
-        );
+        debugger;
+        const [keyFound] = findByPath(allDependencies, path);
 
         if (!keyFound) {
             /* eslint-disable-next-line no-undef */
             return __webpack_require__(resolve(path));
         }
-        debugger;
 
-        const { exports } = jsInvoke(importList[keyFound]);
+        const { exports } = jsInvoke(allDependencies[keyFound]);
 
         return exports;
     };
@@ -54,13 +54,13 @@ export async function render(entries) {
         return code.replace(/require\(/gm, '__customRequire(');
     };
 
-    const renderImpl = async (key) => {
-        const rawCode = entries[key];
-        const unit = { i: `dynamic:${key}`, l: false, exports: {}, importList };
+    const renderImpl = async (path) => {
+        const [, rawCode] = findByPath(entries, path);
+        const unit = { i: `dynamic:${path}`, l: false, exports: {} };
         if (!isItMeaningful(rawCode)) {
             return { func: emptyFunc, unit };
         }
-        const type = extname(key);
+        const type = extname(path);
 
         switch (type) {
             case '':
@@ -68,22 +68,22 @@ export async function render(entries) {
             case jsx: {
                 const code = parse(rawCode);
 
-                reduceAllImports(code, (id, ext) => {
-                    debugger;
-                    if (importList[id]) {
+                reduceAllImports(code, (id) => {
+                    // debugger;
+                    if (loadingDependencies[id]) {
                         return;
                     }
-                    importList = { ...importList, [id]: renderImpl(id + ext) };
+                    loadingDependencies = { ...loadingDependencies, [id]: renderImpl(id) };
                 });
 
                 // eslint-disable-next-line no-eval
                 const func = eval(`(function(module, exports, __webpack_require__) { ${code} })`);
-                return { func, unit };
+                return [path, { func, unit }];
             }
             case json: {
-                debugger;
-                unit.exports = { default: JSON.parse(rawCode) };
-                return { unit };
+                // debugger;
+                unit.exports = JSON.parse(rawCode);
+                return [path, { unit }];
             }
             default:
                 throw new TypeError(`${type} is not supported`);
@@ -91,14 +91,27 @@ export async function render(entries) {
     };
 
     // render the tree starting from the root (main.js)
-    const app = await renderImpl('app.js');
-
+    const [, app] = await renderImpl(entryPath || './app.js');
+    debugger;
     // wait for all the imports to finish parsing
-    importList = await Object.entries(importList).reduce(
-        async (imports, [id, content]) => ({ ...imports, [id]: await content }),
+    allDependencies = (await Promise.all(Object.values(loadingDependencies))).reduce(
+        (imports, [id, dependency]) => {
+            return { ...imports, [id]: dependency };
+        },
         {},
     );
 
+    // await Object
+    //     // from all loading dependencies
+    //     .entries(loadingDependencies)
+    //     // wait for every single one
+    //     .reduce((previous, [id, loadingDependency]) => {
+    //         return previous.then(([resolvedId, dependency]) => {
+    //             allDependencies = resolvedId && { ...allDependencies, [resolvedId]: dependency };
+    //             return [id, loadingDependency];
+    //         });
+    //     }, Promise.resolve([]));
+    debugger;
     return app;
 }
 

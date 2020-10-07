@@ -12,7 +12,10 @@ exports[`webpack invoker happy path for react two components and json 1`] = `
       Start editing to see some magic happen!
     </h2>
     <div>
-      here, some more magic
+      here, some more magic,
+    </div>
+    <div>
+      and here some json: 
     </div>
   </div>
 </div>
