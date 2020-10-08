@@ -7,6 +7,7 @@ import sumAsDefaultOnlyMock from '../__mocks__/sumAsDefaultOnly.mock';
 import sumAsDefaultAndSubtractionMock from '../__mocks__/sumAsDefaultAndSubtraction.mock';
 import sumAndSubtractionNoDefaultMock from '../__mocks__/sumAndSubtractionNoDefault';
 import sumAndSubtractionFromOtherModulesMock from '../__mocks__/sumAndSubtractionFromOtherModules.mock ';
+import sumAsDefaultImportingMultipleLevelsMock from '../__mocks__/sumAsDefaultImportingMultipleLevels.mock';
 
 global.__webpack_require__ = function (id) {};
 global.__webpack_require__.m = [{ './node_modules/react': {} }];
@@ -31,6 +32,15 @@ describe('webpackInvoker', () => {
 
     it('should invoke the module with sum function as default', async () => {
         const { exports } = jsInvoke(await render(sumAsDefaultOnlyMock));
+        const { default: sum } = exports;
+
+        const result = sum(left, right);
+
+        expect(result).toEqual(expectedSumResult);
+    });
+
+    it('should invoke the module with sum function as default and that have a multiple levels of import', async () => {
+        const { exports } = jsInvoke(await render(sumAsDefaultImportingMultipleLevelsMock));
         const { default: sum } = exports;
 
         const result = sum(left, right);

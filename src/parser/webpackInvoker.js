@@ -32,22 +32,6 @@ const parse = (rawCode) => {
 };
 
 export async function render(entries, entryPath = null) {
-    let allDependencies = {};
-
-    // eslint-disable-next-line no-unused-vars, no-underscore-dangle
-    const __customRequire = (path) => {
-        const [keyFound] = findByPath(allDependencies, path);
-
-        if (!keyFound) {
-            /* eslint-disable-next-line no-undef */
-            return __webpack_require__(resolve(path));
-        }
-
-        const { exports } = jsInvoke(allDependencies[keyFound]);
-
-        return exports;
-    };
-
     const renderImpl = (path, dependencies = {}) => {
         const [, rawCode] = findByPath(entries, path);
         const unit = { i: `dynamic:${path}`, l: false, exports: {} };
@@ -55,6 +39,20 @@ export async function render(entries, entryPath = null) {
         if (!isItMeaningful(rawCode)) {
             return { unit, dependencies };
         }
+
+        // eslint-disable-next-line no-unused-vars, no-underscore-dangle
+        const __customRequire = (path) => {
+            const [keyFound] = findByPath(dependencies, path);
+
+            if (!keyFound) {
+                /* eslint-disable-next-line no-undef */
+                return __webpack_require__(resolve(path));
+            }
+
+            const { exports } = jsInvoke(dependencies[keyFound]);
+
+            return exports;
+        };
 
         const type = extname(path);
 
@@ -65,7 +63,10 @@ export async function render(entries, entryPath = null) {
                 const code = parse(rawCode);
                 dependencies = reduceAllImports(
                     code,
-                    (deps, id) => (!deps[id] ? { ...deps, [id]: renderImpl(id, deps) } : deps),
+                    (deps, id) => {
+                        debugger;
+                        return !deps[id] ? { ...deps, [id]: renderImpl(id, deps) } : deps;
+                    },
                     dependencies,
                 );
 
@@ -85,7 +86,6 @@ export async function render(entries, entryPath = null) {
 
     // render the tree starting from the root (main.js)
     const context = renderImpl(entryPath || './app.js');
-    allDependencies = context.dependencies;
     return context;
 }
 
