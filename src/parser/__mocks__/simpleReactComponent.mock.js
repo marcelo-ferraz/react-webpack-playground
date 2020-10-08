@@ -1,5 +1,5 @@
 export default {
-    'app.js': `import React from "react";
+    './app.js': `import React from "react";
 
 export default function App() {
     return (

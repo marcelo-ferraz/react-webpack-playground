@@ -1,5 +1,38 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`webpack invoker happy path for react simple component 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <h1>
+      Hello There
+    </h1>
+    <h2>
+      Start the magic!
+    </h2>
+  </div>
+</div>
+`;
+
+exports[`webpack invoker happy path for react two components 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <h1>
+      Hello CodeSandbox
+    </h1>
+    <h2>
+      Start editing to see some magic happen!
+    </h2>
+    <div>
+      here, some more magic
+    </div>
+  </div>
+</div>
+`;
+
 exports[`webpack invoker happy path for react two components and json 1`] = `
 <div>
   <div
@@ -15,7 +48,12 @@ exports[`webpack invoker happy path for react two components and json 1`] = `
       here, some more magic,
     </div>
     <div>
-      and here some json: 
+      and here some more of the same json: 
+      {"id":42,"hash":"82d06ce0-e19d-4942-853a-4c74d4ae883e"}
+    </div>
+    <div>
+      some json: 
+      {"id":42,"hash":"82d06ce0-e19d-4942-853a-4c74d4ae883e"}
     </div>
   </div>
 </div>

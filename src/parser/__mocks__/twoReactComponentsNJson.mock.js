@@ -2,6 +2,7 @@ export default {
     './app.js': `
 import React from "react";
 import Component2 from "./component-2";
+import data from "./someData.json";
 
 export default function App() {
     return (
@@ -9,6 +10,9 @@ export default function App() {
             <h1>Hello CodeSandbox</h1>
             <h2>Start editing to see some magic happen!</h2>
             <Component2 />
+            <div>
+                some json: {JSON.stringify(data)}
+            </div>
         </div>
     );
 }`,
@@ -22,7 +26,7 @@ export default function Component2() {
             here, some more magic,
         </div>
         <div>
-            and here some json: {JSON.stringify(data)}
+            and here some more of the same json: {JSON.stringify(data)}
         </div>
         </>
     );

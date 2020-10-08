@@ -25,15 +25,14 @@ cases(
         const { exports } = jsInvoke(await render(entry));
 
         const Component = exports.default;
-        // debugger;
 
         const { container } = testRender(<Component />);
 
         expect(container).toMatchSnapshot();
     },
     {
-        // 'simple component': { entry: simpleReactComponentMock },
-        // 'two components': { entry: twoReactComponentsMock },
+        'simple component': { entry: simpleReactComponentMock },
+        'two components': { entry: twoReactComponentsMock },
         'two components and json': { entry: twoReactComponentsNJsonMock },
     },
 );
