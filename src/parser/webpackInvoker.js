@@ -31,6 +31,19 @@ const parse = (rawCode) => {
     return code.replace(/require\(/gm, '__customRequire(');
 };
 
+const customRequire = function (dependencies, path) {
+    const [keyFound] = findByPath(dependencies, path);
+
+    if (!keyFound) {
+        /* eslint-disable-next-line no-undef */
+        return __webpack_require__(resolve(path));
+    }
+
+    const { exports } = jsInvoke(dependencies[keyFound]);
+
+    return exports;
+};
+
 export async function render(entries, entryPath = null) {
     const renderImpl = (path, dependencies = {}) => {
         const [, rawCode] = findByPath(entries, path);
@@ -41,18 +54,13 @@ export async function render(entries, entryPath = null) {
         }
 
         // eslint-disable-next-line no-unused-vars, no-underscore-dangle
-        const __customRequire = (path) => {
-            const [keyFound] = findByPath(dependencies, path);
+        function __customRequire(path) {
+            return customRequire(dependencies, path);
+        }
 
-            if (!keyFound) {
-                /* eslint-disable-next-line no-undef */
-                return __webpack_require__(resolve(path));
-            }
-
-            const { exports } = jsInvoke(dependencies[keyFound]);
-
-            return exports;
-        };
+        function loadDependencies(deps, id) {
+            return !deps[id] ? { ...deps, [id]: renderImpl(id, deps) } : deps;
+        }
 
         const type = extname(path);
 
@@ -61,18 +69,12 @@ export async function render(entries, entryPath = null) {
             case js:
             case jsx: {
                 const code = parse(rawCode);
-                dependencies = reduceAllImports(
-                    code,
-                    (deps, id) => {
-                        debugger;
-                        return !deps[id] ? { ...deps, [id]: renderImpl(id, deps) } : deps;
-                    },
-                    dependencies,
-                );
+
+                dependencies = reduceAllImports(code, loadDependencies, dependencies);
 
                 // eslint-disable-next-line no-eval
                 const func = eval(`(function(module, exports, __webpack_require__) { ${code} })`);
-                return { func, unit, dependencies };
+                return { func, unit };
             }
             case json: {
                 // debugger;
@@ -80,7 +82,7 @@ export async function render(entries, entryPath = null) {
                 return { unit };
             }
             default:
-                throw new TypeError(`${type} is not supported`);
+                throw new TypeError(`The type "${type}" is not supported`);
         }
     };
 
