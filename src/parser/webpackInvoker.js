@@ -11,11 +11,6 @@ const findByPath = (obj, path) =>
         ([key]) => key === path || key === `${path}.js` || key === `${path}/index.js`,
     ) || [];
 
-const emptyFunc = function () {
-    // eslint-disable-next-line no-useless-return
-    return;
-};
-
 function reduceAllImports(code, whenFound, initialState) {
     const findImports = /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w-\.\s\/]+)\\?("|')/gm;
     let acc = initialState;
@@ -34,19 +29,6 @@ function reduceAllImports(code, whenFound, initialState) {
 const parse = (rawCode) => {
     const { code } = Babel.transform(rawCode, { presets: ['es2015', 'react'] });
     return code.replace(/require\(/gm, '__customRequire(');
-};
-
-const customRequire = (path) => {
-    const [keyFound] = findByPath(allDependencies, path);
-
-    if (!keyFound) {
-        /* eslint-disable-next-line no-undef */
-        return __webpack_require__(resolve(path));
-    }
-
-    const { exports } = jsInvoke(dependencies[keyFound]);
-
-    return exports;
 };
 
 export async function render(entries, entryPath = null) {
