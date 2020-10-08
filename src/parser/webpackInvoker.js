@@ -36,23 +36,37 @@ const parse = (rawCode) => {
     return code.replace(/require\(/gm, '__customRequire(');
 };
 
+const customRequire = (path) => {
+    const [keyFound] = findByPath(allDependencies, path);
+
+    if (!keyFound) {
+        /* eslint-disable-next-line no-undef */
+        return __webpack_require__(resolve(path));
+    }
+
+    const { exports } = jsInvoke(dependencies[keyFound]);
+
+    return exports;
+};
+
 export async function render(entries, entryPath = null) {
     let allDependencies = {};
+
+    // eslint-disable-next-line no-unused-vars, no-underscore-dangle
+    const __customRequire = (path) => {
+        const [keyFound] = findByPath(allDependencies, path);
+
+        if (!keyFound) {
+            /* eslint-disable-next-line no-undef */
+            return __webpack_require__(resolve(path));
+        }
+
+        const { exports } = jsInvoke(allDependencies[keyFound]);
+
+        return exports;
+    };
+
     const renderImpl = (path, dependencies = {}) => {
-        // eslint-disable-next-line no-unused-vars, no-underscore-dangle
-        const __customRequire = (path) => {
-            debugger;
-            const [keyFound] = findByPath(allDependencies, path);
-
-            if (!keyFound) {
-                /* eslint-disable-next-line no-undef */
-                return __webpack_require__(resolve(path));
-            }
-
-            const { exports } = jsInvoke(dependencies[keyFound]);
-
-            return exports;
-        };
         const [, rawCode] = findByPath(entries, path);
         const unit = { i: `dynamic:${path}`, l: false, exports: {} };
 
@@ -94,12 +108,10 @@ export async function render(entries, entryPath = null) {
 }
 
 export function jsInvoke({ func, unit }) {
-    if (!func) {
-        return unit;
+    if (func) {
+        // eslint-disable-next-line no-undef
+        func.call(unit.exports, unit, unit.exports, __webpack_require__);
     }
-
-    // eslint-disable-next-line no-undef
-    func.call(unit.exports, unit, unit.exports, __webpack_require__);
 
     return unit;
 }
