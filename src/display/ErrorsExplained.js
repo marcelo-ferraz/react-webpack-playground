@@ -2,12 +2,10 @@ import React from 'react';
 
 import './ErrorsExplained.scss';
 
-export default function ErrorExplained({ title, error }) {
+export default function ErrorsExplained({ error }) {
     return (
         <div className="errors-explained">
-            {(title || error.name) && (
-                <h1 className="error-title">Error: &#34;{title || error.name}&#34;</h1>
-            )}
+            {error.name && <h1 className="error-title">Error: &#34;{error.name}&#34;</h1>}
             <span>
                 There was an error trying to parse the code
                 {error.loc && (

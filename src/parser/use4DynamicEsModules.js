@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
 
-import './BabelParser.scss';
 import stage from './stage';
 import { isItMeaningful } from './helpers';
 
-import { render, jInvoke } from './webpackInvoke';
+import { render as webpackRender, jsInvoke, defaultEntryPath } from '../parser/webpackInvoker';
 
-export default function use4DynamicEsModules(entries, refreshDelay = 300) {
+export default function use4DynamicEsModules(
+    entries,
+    refreshDelay = 300,
+    defaultEntry = defaultEntryPath,
+) {
     const [status, setStatus] = useState(stage.none);
     const [error, setError] = useState();
     const [invokedComponent, setInvokedComponent] = useState(null);
@@ -18,14 +21,14 @@ export default function use4DynamicEsModules(entries, refreshDelay = 300) {
         try {
             setStatus(phase);
 
-            const ctx = await render(units);
+            const ctx = await webpackRender(units);
 
             if (!ctx) {
                 setStatus(stage.notInvoked | stage.finished);
                 return;
             }
             setStatus((phase = stage.invoking));
-            const { exports } = jInvoke(ctx);
+            const { exports } = jsInvoke(ctx);
             setInvokedComponent(exports.default);
             setStatus(stage.invoked | stage.finished);
         } catch (err) {
@@ -44,7 +47,7 @@ export default function use4DynamicEsModules(entries, refreshDelay = 300) {
     }, [refreshDelay]);
 
     useEffect(() => {
-        if (!!entries && isItMeaningful(entries[defaultEntry]) && !!debouncedRenderCode.current) {
+        if (!!entries && isItMeaningful(entries[defaultEntry]) && !!debouncedRenderer.current) {
             debouncedRenderer.current(entries);
         }
     }, [entries]);

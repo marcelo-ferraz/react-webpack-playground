@@ -12,7 +12,7 @@ const findByPath = (obj, path) =>
     ) || [];
 
 function reduceAllImports(code, whenFound, initialState) {
-    const findImports = /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w-\.\s\/]+)\\?("|')/gm;
+    const findImports = /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm; // /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w-\.\s\/]+)\\?("|')/gm;
     let acc = initialState;
     let match;
     do {
@@ -43,6 +43,8 @@ const customRequire = function (dependencies, path) {
 
     return exports;
 };
+
+export const defaultEntryPath = './app.js';
 
 export async function render(entries, entryPath = null) {
     const renderImpl = (path, dependencies = {}) => {
@@ -86,9 +88,8 @@ export async function render(entries, entryPath = null) {
         }
     };
 
-    // render the tree starting from the root (main.js)
-    const context = renderImpl(entryPath || './app.js');
-    return context;
+    // render the tree starting from the root (./app.js)
+    return renderImpl(entryPath || defaultEntryPath);
 }
 
 export function jsInvoke({ func, unit }) {

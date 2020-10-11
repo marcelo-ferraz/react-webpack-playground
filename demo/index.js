@@ -3,10 +3,11 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { render } from 'react-dom';
 import Editor from '../src/editor';
+import Playground from '../src/Playground';
 
 render(
     <StrictMode>
-        <Editor />
+        <Playground />
     </StrictMode>,
     document.querySelector('#root'),
 );
