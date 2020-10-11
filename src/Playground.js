@@ -9,9 +9,11 @@ export default function Playground() {
     const [entries, setEntries] = useState(simpleReactComponentMock);
     const parser = useRef();
 
-    const handleChange = (c, cs) => {
-        const t = entries;
-        debugger;
+    const handleChange = (key, value) => {
+        setEntries({
+            entries,
+            [key]: value,
+        });
     };
 
     return (

@@ -3,15 +3,17 @@ import CodeEditor from './CodeEditor';
 import path from 'path';
 
 export default function Editor({ entries, onChange: triggerChange }) {
-    const [selectedEntry, setSelectedEntry] = useState();
+    const [selectedEntry, setSelectedEntry] = useState('./app.js');
     const [language, setLanguage] = useState();
     const [code, setCode] = useState();
 
     useEffect(() => {
-        if (!entries || selectedEntry) {
+        if (!entries) {
             return;
         }
-        selectEntry('./app.js', entries['./app.js']);
+
+        setCode(entries[selectedEntry]);
+        setLanguage(path.extname(selectedEntry) || '.js');
     }, [entries]);
 
     const selectEntry = (entryName, content) => {

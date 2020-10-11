@@ -15,7 +15,6 @@ const Display = forwardRef(({ entries }, ref) => {
     useImperativeHandle(ref, () => ({ forceRefresh: invokation.forceRefresh }));
 
     const Body = useMemo(() => {
-        debugger;
         switch (true) {
             case error:
                 return <ErrorsExplained error={error} />;

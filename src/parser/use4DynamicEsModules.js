@@ -20,7 +20,7 @@ export default function use4DynamicEsModules(
         let phase = stage.rendering;
         try {
             setStatus(phase);
-
+            console.log('rendering component!');
             const ctx = await webpackRender(units);
 
             if (!ctx) {
@@ -48,6 +48,7 @@ export default function use4DynamicEsModules(
 
     useEffect(() => {
         if (!!entries && isItMeaningful(entries[defaultEntry]) && !!debouncedRenderer.current) {
+            console.log('calling the renderer');
             debouncedRenderer.current(entries);
         }
     }, [entries]);
