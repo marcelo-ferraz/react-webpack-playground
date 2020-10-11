@@ -6,14 +6,13 @@ import simpleReactComponentMock from './parser/__mocks__/simpleReactComponent.mo
 import './simple-grid.scss';
 
 export default function Playground() {
-    const [entries, setEntries] = useState();
+    const [entries, setEntries] = useState(simpleReactComponentMock);
     const parser = useRef();
 
-    useEffect(() => {
-        setEntries(simpleReactComponentMock);
-    }, []);
-
-    const handleChange = () => {};
+    const handleChange = (c, cs) => {
+        const t = entries;
+        debugger;
+    };
 
     return (
         <div className="playground rows">

@@ -2,45 +2,45 @@ import React, { useEffect, useMemo, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import path from 'path';
 
-export default function Editor({ textEntries, onChange: change }) {
-    const [selectedTab, setSelectedTab] = useState();
-    const [code, setCode] = useState({});
+export default function Editor({ entries, onChange: triggerChange }) {
+    const [selectedEntry, setSelectedEntry] = useState();
+    const [language, setLanguage] = useState();
+    const [code, setCode] = useState();
 
     useEffect(() => {
-        if (!textEntries || textEntries.length) {
+        if (!entries || selectedEntry) {
             return;
         }
-        const [[first]] = textEntries;
-        setSelectedTab(first);
-    }, []);
+        selectEntry('./app.js', entries['./app.js']);
+    }, [entries]);
 
     const selectEntry = (entryName, content) => {
-        setSelectedTab(entryName);
-        setCode({ content, language: path.extname(entryName) });
+        setCode(content);
+        setSelectedEntry(entryName);
+        setLanguage(path.extname(entryName) || '.js');
     };
 
     const addEntry = () => {
-        change('new one', '');
+        triggerChange('new one', '');
     };
 
-    const tabs = useMemo(
-        () =>
-            textEntries &&
-            textEntries.length &&
-            textEntries.map(([name, text]) => {
+    const tabs = useMemo(() => {
+        return (
+            entries &&
+            Object.entries(entries).map(([name, text]) => {
                 return (
                     <button
                         key={name}
                         type="button"
-                        className={selectedTab === name ? 'active' : ''}
+                        className={selectedEntry === name ? 'active' : ''}
                         onClick={() => selectEntry(name, text)}
                     >
                         {name}
                     </button>
                 );
-            }),
-        [],
-    );
+            })
+        );
+    }, []);
 
     return (
         <div className="editor">
@@ -51,9 +51,9 @@ export default function Editor({ textEntries, onChange: change }) {
                 </button>
             </div>
             <CodeEditor
-                code={code.content}
-                mode={code.language}
-                onChange={(c) => changeEditor(sample, c, selectedEndpoint)}
+                code={code}
+                mode={language}
+                onChange={(c) => triggerChange(selectedEntry, c)}
             />
         </div>
     );

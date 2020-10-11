@@ -15,37 +15,38 @@ const Display = forwardRef(({ entries }, ref) => {
     useImperativeHandle(ref, () => ({ forceRefresh: invokation.forceRefresh }));
 
     const Body = useMemo(() => {
+        debugger;
         switch (true) {
             case error:
                 return <ErrorsExplained error={error} />;
-            case invokation.state === stage.rendering:
+            case invokation.status === stage.rendering:
                 return <div>Rendering the code</div>;
-            case invokation.state === stage.invoking:
+            case invokation.status === stage.invoking:
                 return <div>Invoking the code</div>;
-            case stage.has(invokation.state, stage.error | stage.rendering):
+            case stage.has(invokation.status, stage.error | stage.rendering):
                 return (
                     <ErrorsExplained
                         title="There was a problem during the rendering"
                         error={invokation.error}
                     />
                 );
-            case stage.has(invokation.state, stage.error | stage.invoking):
+            case stage.has(invokation.status, stage.error | stage.invoking):
                 return (
                     <ErrorsExplained
                         title="There was a problem during the invoking of the module"
                         error={invokation.error}
                     />
                 );
-            case stage.has(invokation.state, stage.error):
+            case stage.has(invokation.status, stage.error):
                 return <ErrorsExplained title="There was a problem" error={invokation.error} />;
-            case stage.has(invokation.state, stage.invoked | stage.finished):
+            case stage.has(invokation.status, stage.invoked | stage.finished):
                 return <ErrorBoundary>{invokation.component}</ErrorBoundary>;
-            case (!invokation.component && invokation.state === stage.none) ||
-                stage.has(invokation.state, stage.finished):
+            case (!invokation.component && invokation.status === stage.none) ||
+                stage.has(invokation.status, stage.finished):
             default:
                 return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
         }
-    }, []);
+    }, [error, invokation.status]);
 
     let comp = null;
     try {
