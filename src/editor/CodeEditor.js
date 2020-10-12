@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import AceEditor from 'react-ace';
+import { debounce } from 'lodash';
 
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-json';
@@ -9,8 +10,14 @@ import 'ace-builds/src-noconflict/snippets/javascript';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import 'ace-builds/webpack-resolver';
 
-export default function CodeEditor({ code, mode = 'javascript', onChange: codeChange }) {
+export default function CodeEditor({ code, mode = 'javascript', onChange, changeWait = 300 }) {
     const aceEditor = useRef();
+
+    const triggerCodeChange = useCallback(debounce(onChange, changeWait), [changeWait]);
+
+    useEffect(() => {
+        return () => debouncedRenderer.current.cancel();
+    }, []);
 
     return (
         <AceEditor
@@ -19,7 +26,7 @@ export default function CodeEditor({ code, mode = 'javascript', onChange: codeCh
             mode={mode}
             theme="twilight"
             name="codeEditor"
-            onChange={codeChange}
+            onChange={triggerCodeChange}
             fontSize={14}
             width="100%"
             height="100vh"

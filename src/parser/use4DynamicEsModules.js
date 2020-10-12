@@ -6,15 +6,10 @@ import { isItMeaningful } from './helpers';
 
 import { render as webpackRender, jsInvoke, defaultEntryPath } from '../parser/webpackInvoker';
 
-export default function use4DynamicEsModules(
-    entries,
-    refreshDelay = 300,
-    defaultEntry = defaultEntryPath,
-) {
+export default function use4DynamicEsModules(entries, defaultEntry = defaultEntryPath) {
     const [status, setStatus] = useState(stage.none);
     const [error, setError] = useState();
     const [invokedComponent, setInvokedComponent] = useState(null);
-    const debouncedRenderer = useRef();
 
     const render = async (units) => {
         let phase = stage.rendering;
@@ -38,24 +33,14 @@ export default function use4DynamicEsModules(
     };
 
     useEffect(() => {
-        debouncedRenderer.current = debounce(render, refreshDelay, {
-            maxWait: refreshDelay * 1.4,
-            trailing: true,
-        });
-
-        return () => debouncedRenderer.current.cancel();
-    }, [refreshDelay]);
-
-    useEffect(() => {
-        if (!!entries && isItMeaningful(entries[defaultEntry]) && !!debouncedRenderer.current) {
-            console.log('calling the renderer');
-            debouncedRenderer.current(entries);
+        if (!!entries && isItMeaningful(entries[defaultEntry])) {
+            render(entries);
         }
     }, [entries]);
 
     const forceRefresh = () => {
         if (!stage.has(stage.rendering, status)) {
-            renderCode(entries);
+            render(entries);
         }
     };
 
