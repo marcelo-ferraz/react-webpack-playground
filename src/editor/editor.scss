@@ -1,0 +1,53 @@
+$primary-color: #5c739b;
+$secondary-color: #c1c1c7;
+
+$editor-border: 4px;
+
+[class^="s-"] > div.editor {
+    padding: 0;
+}
+
+.editor {
+    .ace_editor {
+        height: 100%;
+        width: 100%;
+        border: $editor-border solid $primary-color;
+    }
+    .tabs {
+        button {
+            padding: 8px 14px 4px 14px;
+            background-color: darken($primary-color, 10%);
+            color: $secondary-color;
+            border: 0;
+
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+
+            width: auto;
+
+            &:focus {
+                outline: 0;
+            }
+
+            &.active {
+                background-color: $primary-color;
+                color: $secondary-color;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: calc(#{$editor-border} + 100%);
+                    left: 50%;
+                    margin-left: -10px;
+                    width: 0;
+                    height: 0;
+                    border-top: solid 10px #5c739b;
+                    border-left: solid 10px transparent;
+                    border-right: solid 10px transparent;
+                    z-index: 99;
+                }
+            }
+        }
+    }
+}

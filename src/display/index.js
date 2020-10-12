@@ -1,14 +1,14 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect, useMemo } from 'react';
-import ErrorBoundaryForInvoker from './ErrorBoundaryForInvoker';
-import ErrorExplained from './ErrorsExplained';
-import { isItMeaningful } from './helpers';
-import use4DynamicEsModules from './use4DynamicEsModules';
+import use4DynamicEsModules from '../parser/use4DynamicEsModules';
 
-import './BabelParser.scss';
-import stage from './stage';
+import ErrorBoundary from './ErrorsBoundary';
+import ErrorsExplained from './ErrorsExplained';
+import stage from '../parser/stage';
 
-const BabelParser = forwardRef(({ code }, ref) => {
-    const invokation = use4DynamicEsModules(code);
+import './display.scss';
+
+const Display = forwardRef(({ entries }, ref) => {
+    const invokation = use4DynamicEsModules(entries);
 
     const [error, setError] = useState();
 
@@ -17,40 +17,40 @@ const BabelParser = forwardRef(({ code }, ref) => {
     const Body = useMemo(() => {
         switch (true) {
             case error:
-                return <ErrorExplained error={error} />;
-            case invokation.state === stage.rendering:
+                return <ErrorsExplained error={error} />;
+            case invokation.status === stage.rendering:
                 return <div>Rendering the code</div>;
-            case invokation.state === stage.invoking:
+            case invokation.status === stage.invoking:
                 return <div>Invoking the code</div>;
-            case stage.has(invokation.state, stage.error | stage.rendering):
+            case stage.has(invokation.status, stage.error | stage.rendering):
                 return (
-                    <ErrorExplained
+                    <ErrorsExplained
                         title="There was a problem during the rendering"
                         error={invokation.error}
                     />
                 );
-            case stage.has(invokation.state, stage.error | stage.invoking):
+            case stage.has(invokation.status, stage.error | stage.invoking):
                 return (
-                    <ErrorExplained
+                    <ErrorsExplained
                         title="There was a problem during the invoking of the module"
                         error={invokation.error}
                     />
                 );
-            case stage.has(invokation.state, stage.error):
-                return <ErrorExplained title="There was a problem" error={invokation.error} />;
-            case stage.has(invokation.state, stage.invoked | stage.finished):
-                return <ErrorBoundaryForInvoker>{invokation.component}</ErrorBoundaryForInvoker>;
-            case (!invokation.component && invokation.state === stage.none) ||
-                stage.has(invokation.state, stage.finished):
+            case stage.has(invokation.status, stage.error):
+                return <ErrorsExplained title="There was a problem" error={invokation.error} />;
+            case stage.has(invokation.status, stage.invoked | stage.finished):
+                return <ErrorBoundary>{invokation.component}</ErrorBoundary>;
+            case (!invokation.component && invokation.status === stage.none) ||
+                stage.has(invokation.status, stage.finished):
             default:
                 return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
         }
-    }, []);
+    }, [error, invokation.status]);
 
     let comp = null;
     try {
         comp = (
-            <div className="babel-parser columns">
+            <div className="display columns">
                 <div>
                     <button className="refresh" type="button" onClick={invokation.forceRefresh}>
                         <span
@@ -72,4 +72,4 @@ const BabelParser = forwardRef(({ code }, ref) => {
     return comp;
 });
 
-export default BabelParser;
+export default Display;
