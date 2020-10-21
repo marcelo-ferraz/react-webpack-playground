@@ -20,6 +20,7 @@ const getExternals = () => {
     };
 
     const lodash = {
+        commonjs2: 'lodash',
         commonjs: 'lodash',
         amd: 'lodash',
         root: '_', // indicates global variable

@@ -31,15 +31,16 @@ import NotReallyAMagicalContext from './NotReallyAMagicalContext';
 export default function SomeMagic() {
     const {text, setText} = useContext(NotReallyAMagicalContext);
 
-    return (<div style={{ 
-        color: '#3c763d',
-        backgroundColor: '#dff0d8',
-        borderColor: '#d6e9c6',
-        padding: '15px',
-        marginBottom: '20px',
-        border: '1px solid transparent',
-        borderRadius: '4px',
-     }}>
+    return (<div 
+        style={{ 
+            color: '#E6E6E6',
+            backgroundColor: '#2196F3',
+            borderColor: '#144B76;',
+            padding: '15px',
+            marginBottom: '20px',
+            border: '1px solid transparent',
+            borderRadius: '4px',
+        }}>
         <strong>Change here: </strong>
         <input 
             type='text' 
@@ -51,7 +52,7 @@ export default function SomeMagic() {
 `,
     },
     getExternalDependencies: () => ({}),
-    beforeRender: (strategy) => { },
-    beforeInvoke: (context) => { },
-    afterInvoke: (context) => { },
+    beforeRender: (strategy) => {},
+    beforeInvoke: (context) => {},
+    afterInvoke: (context) => {},
 };
