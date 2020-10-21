@@ -5,5 +5,9 @@
     "prettier.singleQuote": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "eslint.format.enable": true,
-    "typescript.preferences.quoteStyle": "single"
+    "typescript.preferences.quoteStyle": "single",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.eslint": false
+    }
 }

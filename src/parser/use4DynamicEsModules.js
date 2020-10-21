@@ -1,30 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
-import { debounce } from 'lodash';
 
 import stage from './stage';
 import { isItMeaningful } from './helpers';
 
 import { render as webpackRender, jsInvoke, defaultEntryPath } from '../parser/webpackInvoker';
 
-export default function use4DynamicEsModules(entries, defaultEntry = defaultEntryPath) {
+export default function use4DynamicEsModules(context, defaultEntry) {
     const [status, setStatus] = useState(stage.none);
     const [error, setError] = useState();
-    const [invokedComponent, setInvokedComponent] = useState(null);
+    const invokedComponent = useRef();
 
-    const render = async (units) => {
+    const render = async (entries, path = defaultEntryPath) => {
         let phase = stage.rendering;
         try {
             setStatus(phase);
-            console.log('rendering component!');
-            const ctx = await webpackRender(units);
+            const ctx = await webpackRender(entries, path);
 
             if (!ctx) {
                 setStatus(stage.notInvoked | stage.finished);
+                invokedComponent.current = null;
                 return;
             }
             setStatus((phase = stage.invoking));
             const { exports } = jsInvoke(ctx);
-            setInvokedComponent(exports.default);
+            invokedComponent.current = exports.default;
             setStatus(stage.invoked | stage.finished);
         } catch (err) {
             setError(err);
@@ -33,20 +32,20 @@ export default function use4DynamicEsModules(entries, defaultEntry = defaultEntr
     };
 
     useEffect(() => {
-        if (!!entries && isItMeaningful(entries[defaultEntry])) {
-            render(entries);
+        if (!!context) {
+            render(context, defaultEntry);
         }
-    }, [entries]);
+    }, [context, defaultEntry]);
 
     const forceRefresh = () => {
         if (!stage.has(stage.rendering, status)) {
-            render(entries);
+            render(context, defaultEntry);
         }
     };
 
     return {
         canInvoke: stage.has(stage.invoked, status),
-        component: invokedComponent,
+        component: invokedComponent.current || null,
         forceRefresh,
         status,
         error,

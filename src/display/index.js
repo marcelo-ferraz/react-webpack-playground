@@ -1,75 +1,51 @@
-import React, { useState, forwardRef, useImperativeHandle, useEffect, useMemo } from 'react';
-import use4DynamicEsModules from '../parser/use4DynamicEsModules';
+import React, { forwardRef, useImperativeHandle, useEffect, useRef } from 'react';
 
 import ErrorBoundary from './ErrorsBoundary';
-import ErrorsExplained from './ErrorsExplained';
 import stage from '../parser/stage';
+import DisplayBody from './DynamicBody';
 
 import './display.scss';
 
-const Display = forwardRef(({ entries }, ref) => {
-    const invokation = use4DynamicEsModules(entries);
+export default forwardRef(({ context, defaultPath }, ref) => {
+    const invokationRef = useRef();
+    const boundariesRef = useRef();
 
-    const [error, setError] = useState();
+    useImperativeHandle(ref, () => ({
+        forceRefresh: invokationRef.current ? invokationRef.current.forceRefresh : () => {},
+    }));
 
-    useImperativeHandle(ref, () => ({ forceRefresh: invokation.forceRefresh }));
-
-    const Body = useMemo(() => {
-        switch (true) {
-            case error:
-                return <ErrorsExplained error={error} />;
-            case invokation.status === stage.rendering:
-                return <div>Rendering the code</div>;
-            case invokation.status === stage.invoking:
-                return <div>Invoking the code</div>;
-            case stage.has(invokation.status, stage.error | stage.rendering):
-                return (
-                    <ErrorsExplained
-                        title="There was a problem during the rendering"
-                        error={invokation.error}
-                    />
-                );
-            case stage.has(invokation.status, stage.error | stage.invoking):
-                return (
-                    <ErrorsExplained
-                        title="There was a problem during the invoking of the module"
-                        error={invokation.error}
-                    />
-                );
-            case stage.has(invokation.status, stage.error):
-                return <ErrorsExplained title="There was a problem" error={invokation.error} />;
-            case stage.has(invokation.status, stage.invoked | stage.finished):
-                return <ErrorBoundary>{invokation.component}</ErrorBoundary>;
-            case (!invokation.component && invokation.status === stage.none) ||
-                stage.has(invokation.status, stage.finished):
-            default:
-                return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
+    useEffect(() => {
+        if (boundariesRef.current.error) {
+            boundariesRef.current.reset();
         }
-    }, [error, invokation.status]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [invokationRef.current]);
 
-    let comp = null;
-    try {
-        comp = (
-            <div className="display columns">
-                <div>
-                    <button className="refresh" type="button" onClick={invokation.forceRefresh}>
-                        <span
-                            className={
-                                !stage.has(stage.invoked, invokation.status) ? 'rotating' : ''
-                            }
-                        >
-                            ⭯
-                        </span>
-                    </button>
-                </div>
-                <div className="grow dynamic">{Body}</div>
+    return (
+        <div className="display columns">
+            <div className="s-1-12">
+                <button
+                    className="refresh"
+                    type="button"
+                    onClick={invokationRef.current && invokationRef.current.forceRefresh}
+                >
+                    <span
+                        className={
+                            invokationRef.current &&
+                            !stage.has(stage.invoked, invokationRef.current.status)
+                                ? 'rotating'
+                                : ''
+                        }
+                    >
+                        ⭯
+                    </span>
+                </button>
             </div>
-        );
-    } catch (err) {
-        setError(err);
-    }
-
-    return comp;
+            <div className="grow dynamic">
+                <ErrorBoundary fatal ref={boundariesRef}>
+                    <DisplayBody ref={invokationRef} context={context} defaultPath={defaultPath} />
+                </ErrorBoundary>
+            </div>
+        </div>
+    );
 });
-
-export default Display;

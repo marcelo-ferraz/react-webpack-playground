@@ -1,0 +1,35 @@
+:root {
+    --color-1: #cb997e;
+    --color-2: #ddbea9;
+    --color-3: #ffe8d6;
+    --color-4: #b7b7a4;
+    --color-5: #a5a58d;
+    --color-6: #6b705c;
+
+    --bkg-color: var(--color-3);
+    --editor-border-color: var(--color-5);
+
+    --tab-bkg-color: var(--color-4);
+    --tab-color: var(--color-6);
+    --tab-bkg-color-hover: var(--color-3);
+    --tab-color-hover: var(--color-4);
+    --active-tab-bkg-color: var(--color-5);
+    --active-tab-color: var(--color-3);
+    --active-tab-bkg-color-hover: var(--color-1);
+    --active-tab-color-hover: var(--color-3);
+
+    --renaming-tab-border-color: var(--color-1);
+    --renaming-tab-color: var(--color-1);
+
+    --close-btn-color: var(--color-5);
+    --close-btn-color-hover: var(--color-3);
+
+    --display-border-color: var(--color-5);
+    --display-bkg-color: #e9e9e9;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background-color: var(--bkg-color);
+}

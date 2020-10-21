@@ -33,7 +33,7 @@ const getExternals = () => {
 };
 
 const getOutput = () => ({
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(process.cwd(), 'dist'),
     chunkFilename: '[name]_chunk.js',
     filename: '[name].js',
     libraryTarget: 'umd',

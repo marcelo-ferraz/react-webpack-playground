@@ -4,13 +4,20 @@
         "sourceType": "module",
         "allowImportExportEverywhere": true
     },
-    "extends": ["prettier/standard", "prettier/react", "plugin:prettier/recommended"],
-    "plugins": ["prettier", "jest"],
+    "extends": [
+        "plugin:prettier/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier/standard",
+        "prettier/react"
+    ],
+    "plugins": ["prettier", "jest", "react", "react-hooks"],
     "env": {
         "jest": true,
         "jest/globals": true
     },
     "rules": {
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
     }
 }

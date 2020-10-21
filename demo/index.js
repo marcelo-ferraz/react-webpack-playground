@@ -2,12 +2,12 @@ import React, { StrictMode } from 'react';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { render } from 'react-dom';
-import Editor from '../src/editor';
-import Playground from '../src/Playground';
+import Playground from '../src';
+import sampleReactComponent from './sampleReactComponent';
 
 render(
     <StrictMode>
-        <Playground />
+        <Playground initialContext={sampleReactComponent} />
     </StrictMode>,
     document.querySelector('#root'),
 );

@@ -2,6 +2,8 @@ import React from 'react';
 
 import './ErrorsExplained.scss';
 
+const maxLength = 1024;
+
 export default function ErrorsExplained({ error }) {
     return (
         <div className="errors-explained">
@@ -31,7 +33,11 @@ export default function ErrorsExplained({ error }) {
             {error.stack && (
                 <div className="error-stack">
                     <span className="error-sub-title">Stack:</span>
-                    <pre>{error.stack}</pre>
+                    {error.stack.length > maxLength ? (
+                        <pre>{error.stack.substring(0, maxLength)} ...</pre>
+                    ) : (
+                        <pre>{error.stack}</pre>
+                    )}
                 </div>
             )}
         </div>

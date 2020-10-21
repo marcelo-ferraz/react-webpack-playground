@@ -11,6 +11,7 @@
 # production
 build/**/*
 dist/**/*
+config/dist/**/*
 !dist/package.json
 
 # misc
@@ -30,4 +31,3 @@ dist/**/*
 # jest outputs
 test-report.json
 junit.xml
-

@@ -1,18 +1,20 @@
 export default {
-    './app.js': `
+    entries: {
+        './app.js': `
 import subtract from './subtraction.js';
 import sum from './sum.js';
 
 export { sum, subtract };
 `,
-    './subtraction.js': `
+        './subtraction.js': `
 export default function subtract(left, right) {
     return left - right;
 };
 `,
-    './sum.js': `
+        './sum.js': `
 export default function sum(left, right) {
     return left + right;
 }
 `,
+    },
 };

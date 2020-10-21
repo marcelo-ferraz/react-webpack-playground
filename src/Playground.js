@@ -1,28 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useReducer, useRef } from 'react';
 import Editor from './editor';
 import Display from './display';
-import simpleReactComponentMock from './parser/__mocks__/simpleReactComponent.mock';
+import contextReducer from './contextReducer';
 
-import './simple-grid.scss';
+import './Playground.scss';
 
-export default function Playground() {
-    const [entries, setEntries] = useState(simpleReactComponentMock);
-    const parser = useRef();
+const defaultState = {
+    entries: {
+        './app.js': '',
+    },
+};
 
-    const handleChange = (key, value) => {
-        setEntries({
-            entries,
-            [key]: value,
-        });
+export default function Playground({ initialContext }) {
+    const [dynamicContext, dispatch] = useReducer(contextReducer, initialContext || defaultState);
+
+    const saveEntry = (key, value) => {
+        dispatch({ type: 'save-entry', payload: { [key]: value } });
     };
+
+    const renameEntry = (oldKey, newKey) => {
+        dispatch({ type: 'rename-entry', payload: { oldKey, newKey } });
+    };
+
+    const parser = useRef();
 
     return (
         <div className="playground rows">
             <div className="s-1 s-sm-1-2">
-                <Editor entries={entries} onChange={handleChange} />
+                <Editor context={dynamicContext} onRename={renameEntry} onChange={saveEntry} />
             </div>
             <div className="s-1 s-sm-1-2">
-                <Display ref={parser} entries={entries} />
+                <Display context={dynamicContext} ref={parser} />
             </div>
         </div>
     );

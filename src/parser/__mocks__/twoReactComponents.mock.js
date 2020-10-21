@@ -1,5 +1,6 @@
 export default {
-    './app.js': `
+    entries: {
+        './app.js': `
 import React from "react";
 import Component2 from "./component-2";
 
@@ -12,10 +13,11 @@ export default function App() {
         </div>
     );
 }`,
-    './component-2.js': `
+        './component-2.js': `
 import React from "react";
 
 export default function Component2() {
     return <div>here, some more magic</div>;
 }`,
+    },
 };

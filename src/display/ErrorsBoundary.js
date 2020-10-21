@@ -1,25 +1,42 @@
-import React, { Component } from 'react';
+import React, { Component, createRef, forwardRef } from 'react';
 import ErrorsExplained from './ErrorsExplained';
 
-export default class ErrorBoundaryForInvoker extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
+const initial_state = {
+    error: null,
+    info: null,
+};
 
-    static getDerivedStateFromError(error) {
-        return { error, hasError: true };
-    }
+export default React.forwardRef((props, ref) => {
+    class ErrorBoundariesImpl extends Component {
+        constructor(props) {
+            super(props);
+            this.state = { hasError: false };
 
-    componentDidCatch(error, errorInfo) {
-        console.error(error, errorInfo);
-    }
-
-    render() {
-        if (this.state.hasError) {
-            return <ErrorsExplained fatal error={this.state.error} />;
+            if (ref) {
+                ref.current = { reset: () => this.reset(), error: this.state.error };
+            }
         }
 
-        return this.props.children;
+        static getDerivedStateFromError(error) {
+            return { error, hasError: true };
+        }
+
+        componentDidCatch(error, info) {
+            this.setState({ error: error, info: info });
+        }
+
+        reset() {
+            this.setState(initial_state);
+        }
+
+        render() {
+            if (this.state.error) {
+                return <ErrorsExplained fatal error={this.state.error} />;
+            }
+
+            return this.props.children;
+        }
     }
-}
+
+    return <ErrorBoundariesImpl {...props} />;
+});

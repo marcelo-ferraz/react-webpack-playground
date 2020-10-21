@@ -1,23 +1,48 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import AceEditor from 'react-ace';
-import { debounce } from 'lodash';
 
 import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/mode-jsx';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-twilight';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/snippets/javascript';
+import 'ace-builds/src-noconflict/snippets/jsx';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import 'ace-builds/webpack-resolver';
 
-export default function CodeEditor({ code, mode = 'javascript', onChange, changeWait = 300 }) {
+import 'ace-builds/src-min-noconflict/ext-beautify';
+import tabDirection from './tabDirection';
+
+export default function CodeEditor({
+    code,
+    mode = 'jsx',
+    onChangeTab,
+    onChange: triggerCodeChange,
+}) {
     const aceEditor = useRef();
 
-    const triggerCodeChange = useCallback(debounce(onChange, changeWait), [changeWait]);
-
     useEffect(() => {
-        return () => debouncedRenderer.current.cancel();
-    }, []);
+        const commands = aceEditor.current.editor.commands;
+        commands.addCommands([
+            {
+                name: 'next-tab',
+                bindKey: { win: 'Alt-`', mac: 'Command-Tab' },
+                exec: () => {
+                    onChangeTab && onChangeTab(tabDirection.next);
+                },
+                readOnly: true,
+            },
+            {
+                name: 'previous-tab',
+                bindKey: { win: 'Alt-Shift-`', mac: 'Command-Shift-Tab' },
+                exec: () => {
+                    onChangeTab && onChangeTab(tabDirection.previous);
+                },
+                readOnly: true,
+            },
+        ]);
+    }, [code, onChangeTab]);
 
     return (
         <AceEditor
@@ -29,7 +54,10 @@ export default function CodeEditor({ code, mode = 'javascript', onChange, change
             onChange={triggerCodeChange}
             fontSize={14}
             width="100%"
-            height="100vh"
+            style={{
+                boxSizing: 'border-box',
+                height: 'calc(100vh - 34px)',
+            }}
             showPrintMargin
             showGutter
             highlightActiveLine
