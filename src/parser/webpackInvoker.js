@@ -1,52 +1,67 @@
-import * as Babel from '@babel/standalone';
+import { transform } from '@babel/standalone';
 import { find } from 'lodash';
-import { resolve as pathResolve, dirname, basename, extname } from 'path';
+import { extname } from 'path';
 import { js, json, jsx } from '../fileExtensions';
 import { isItMeaningful } from './helpers';
-import { resolve } from './helpers';
-const findByPath = (obj, path) =>
-    find(
-        Object.entries(obj),
-        ([key]) => key === path || key === `${path}.js` || key === `${path}/index.js`,
-    ) || [];
+import { tryResolve } from './helpers';
+import MissingModuleError from './MissingModuleError';
 
-function reduceAllImports(code, whenFound, initialState) {
-    const findImports = /__customRequire\(\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
-    let acc = initialState;
+const byEqual = (path) => ([key]) =>
+    key === path || key === `${path}.js` || key === `${path}/index.js`;
+
+const findByPath = (obj, path) => find(Object.entries(obj), byEqual(path)) || [];
+
+function findAllImports(code, whenFound) {
+    const findImports = /__customRequire\(__webpack_require__\,\s*\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
     let match;
+
     do {
         match = findImports.exec(code);
 
         if (match && match.groups) {
             const { importId } = match.groups;
-            acc = whenFound(acc, importId);
+            whenFound(importId);
         }
     } while (match);
-    return acc;
 }
 
 const parse = (rawCode) => {
-    const { code } = Babel.transform(rawCode, { presets: ['es2015', 'react'] });
-    return code.replace(/require\(/gm, '__customRequire(');
+    const { code } = transform(rawCode, { presets: ['es2015', 'react'] });
+    return code.replace(/require\(/gm, '__customRequire(__webpack_require__, ');
 };
 
-const customRequireImpl = function (dependencies, path) {
-    const [keyFound] = findByPath(dependencies, path);
-    if (!keyFound) {
-        /* eslint-disable-next-line no-undef */
-        return __webpack_require__(resolve(path));
+const customRequireImpl = function (use = __webpack_require__, dependencies, path) {
+    let fullPath = tryResolve(dependencies, path);
+
+    if (fullPath) {
+        const dependency = dependencies[fullPath];
+
+        if (dependency.__esModule) {
+            return dependency;
+        }
+
+        const invoked = jsInvoke(dependency);
+        return invoked.exports || invoked;
     }
-    const { exports } = jsInvoke(dependencies[keyFound]);
 
-    return exports;
+    fullPath = tryResolve(use.m, path);
+    if (fullPath) {
+        return use(fullPath);
+    }
+
+    try {
+        return use(path);
+    } catch (error) {
+        throw new MissingModuleError(`Couldnt find a module for ${path}`, error);
+    }
 };
 
-const loadAllExtraDependencies = async ({ getExternalDependencies }) => {
-    if (!getExternalDependencies) {
+const loadAllExtraDependencies = async ({ getExtraDependencies }) => {
+    if (!getExtraDependencies) {
         return {};
     }
 
-    const dependencies = getExternalDependencies();
+    const dependencies = getExtraDependencies();
     const dependencyValues = Promise.all(Object.values(dependencies));
     const dependencyKeys = Object.keys(dependencies);
 
@@ -55,10 +70,12 @@ const loadAllExtraDependencies = async ({ getExternalDependencies }) => {
     }, {});
 };
 
-export const defaultEntryPath = './app.js';
+export const defaultEntryPath = './App.js';
 
 export async function render(strategy, entryPath = null) {
-    const renderImpl = (path, dependencies = {}) => {
+    let dependencies = {};
+
+    const renderImpl = (path) => {
         const [, rawCode] = findByPath(strategy.entries, path);
         const unit = { i: `dynamic:${path}`, l: false, exports: {} };
 
@@ -66,13 +83,13 @@ export async function render(strategy, entryPath = null) {
             return { unit };
         }
 
-        // eslint-disable-next-line no-unused-vars, no-underscore-dangle
-        function __customRequire(path) {
-            return customRequireImpl(dependencies, path);
+        // eslint-disable-next-line no-unused-vars, no-underscore-dangle
+        function __customRequire(req, path) {
+            return customRequireImpl(req, dependencies, path);
         }
 
-        function loadDependencies(deps, id) {
-            return !deps[id] ? { ...deps, [id]: renderImpl(id, deps) } : deps;
+        function addToDependencies(deps, id) {
+            dependencies[id] = renderImpl(id, dependencies);
         }
 
         const type = extname(path);
@@ -82,9 +99,11 @@ export async function render(strategy, entryPath = null) {
             case js:
             case jsx: {
                 const code = parse(rawCode);
-                dependencies = reduceAllImports(code, loadDependencies, dependencies);
-                // eslint-disable-next-line no-eval
-                const func = eval(`(function(module, exports, __webpack_require__) { ${code} })`);
+                findAllImports(code, (id) => {
+                    dependencies[id] = renderImpl(id, dependencies);
+                });
+                // eslint-disable-next-line no-eval
+                const func = eval(`(function(module, exports, __webpack_require__) { ${code} })`);
                 return {
                     func,
                     unit,
@@ -96,20 +115,23 @@ export async function render(strategy, entryPath = null) {
                 return { unit };
             }
             default:
-                throw new TypeError(`The type "${type}" is not supported`);
+                throw new TypeError(`The type "${type}" is not supported`);
         }
     };
 
-    // render the tree starting from the root (./app.js)
-    let extraDependencies = await loadAllExtraDependencies(strategy);
+    // render the tree starting from the root (./app.js)
+    let extraDependencies = (await loadAllExtraDependencies(strategy)) || {};
 
     if (strategy.beforeRender) {
         extraDependencies = strategy.beforeRender(strategy, extraDependencies);
     }
 
-    const dynamicContext = renderImpl(entryPath || defaultEntryPath, extraDependencies);
+    dependencies = { ...dependencies, ...extraDependencies };
 
-    dynamicContext.customRequire = (path) => customRequireImpl(dependencies, path);
+    const dynamicContext = renderImpl(entryPath || defaultEntryPath);
+
+    dynamicContext.customRequire = (path) =>
+        customRequireImpl(__webpack_require__, dependencies, path);
     dynamicContext.addDependencies = (key, value) => {
         dependencies = { ...dependencies, [key]: value };
     };
@@ -129,11 +151,10 @@ export function jsInvoke(context) {
             context.events.beforeInvoke(context);
         }
 
-        context.func.call(
-            context.unit.exports,
+        context.func(
             context.unit,
             context.unit.exports,
-            // eslint-disable-next-line no-undef
+            // eslint-disable-next-line no-undef
             __webpack_require__,
         );
 

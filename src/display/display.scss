@@ -1,6 +1,4 @@
-$primary-color: #5c739b;
-$secondary-color: #c1c1c7;
-$refresh-btn-height: 34px;
+$tools-height: 34px;
 
 [class^='s-'] > div.display {
     padding-top: 0;
@@ -8,29 +6,29 @@ $refresh-btn-height: 34px;
 }
 
 .display {
-    &:hover {
-        .refresh {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.5s linear;
-        }
-    }
-    .refresh {
-        visibility: hidden;
+    .tools {
         opacity: 0;
         transition: visibility 0s 0.5s, opacity 0.5s linear;
         transition: opacity fade 0.3s;
         position: absolute;
-        right: 0;
-        padding: 8px 14px 4px 14px;
-        box-sizing: border-box;
-        height: $refresh-btn-height;
-        background-color: var(--color-3);
-        color: var(--color-1);
-        border: 0;
+        align-self: flex-end;
+        height: $tools-height;
+
+        .refresh-btn {
+            padding: 4px 14px 4px 14px;
+            box-sizing: border-box;
+            background-color: var(--color-3);
+            color: var(--color-1);
+            border: 0;
+        }
 
         span {
             display: inline-block;
+        }
+
+        &:hover {
+            opacity: 1;
+            transition: opacity 0.5s linear;
         }
     }
 

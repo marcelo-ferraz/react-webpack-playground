@@ -14,11 +14,6 @@ global.__webpack_require__ = function (id) {
 };
 global.__webpack_require__.m = [{ './node_modules/react': {} }];
 
-jest.mock('../helpers', () => ({
-    resolve: (p) => p,
-    isItMeaningful: () => true,
-}));
-
 cases(
     'webpack invoker happy path for react',
     async ({ entry }) => {

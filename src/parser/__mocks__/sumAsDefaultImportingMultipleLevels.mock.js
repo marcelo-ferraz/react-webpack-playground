@@ -1,6 +1,6 @@
 export default {
     entries: {
-        './app.js': `
+        './App.js': `
 import deepSum from './deeper-sum';
 
 export default function sum(left, right) {

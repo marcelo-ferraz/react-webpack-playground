@@ -23,9 +23,9 @@ export default forwardRef(({ context, defaultPath }, ref) => {
 
     return (
         <div className="display columns">
-            <div className="s-1-12">
+            <div className="s-1-12 rows tools">
                 <button
-                    className="refresh"
+                    className="refresh-btn"
                     type="button"
                     onClick={invokationRef.current && invokationRef.current.forceRefresh}
                 >
@@ -40,10 +40,11 @@ export default forwardRef(({ context, defaultPath }, ref) => {
                         ⭯
                     </span>
                 </button>
+                <input type="checkbox" className="regular-checkbox big"></input>
             </div>
             <div className="grow dynamic">
                 <ErrorBoundary fatal ref={boundariesRef}>
-                    <DisplayBody ref={invokationRef} context={context} defaultPath={defaultPath} />
+                    <DisplayBody defaultPath={defaultPath} ref={invokationRef} context={context} />
                 </ErrorBoundary>
             </div>
         </div>

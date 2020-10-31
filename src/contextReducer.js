@@ -1,5 +1,7 @@
 export default function contextReducer(state, { type, payload }) {
     switch (type) {
+        case 'save-project':
+            return payload;
         case 'rename-entry':
             const { oldKey, newKey } = payload;
             const value = state.entries[oldKey];

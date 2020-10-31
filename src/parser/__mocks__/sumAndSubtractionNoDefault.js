@@ -1,6 +1,6 @@
 export default {
     entries: {
-        './app.js': `
+        './App.js': `
 export function sum(left, right) {
     return left + right;
 }

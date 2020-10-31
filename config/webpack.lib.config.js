@@ -2,6 +2,28 @@ const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const baseConfig = require('./webpack.base.config');
 
+const getAceBuilds = () =>
+    [
+        'mode-javascript',
+        'mode-jsx',
+        'mode-json',
+        'theme-twilight',
+        'ext-language_tools',
+        'snippets/javascript',
+        'snippets/jsx',
+        'ext-searchbox',
+        'ext-beautify',
+    ].reduce(
+        (deps, dep) => {
+            const fullPath = `ace-builds/src-min-noconflict/${dep}`;
+
+            return { ...deps, [fullPath]: fullPath };
+        },
+        {
+            'ace-builds/webpack-resolver': 'ace-builds/webpack-resolver',
+        },
+    );
+
 const getExternals = () => {
     const react = {
         root: 'React',
@@ -23,13 +45,29 @@ const getExternals = () => {
         commonjs2: 'lodash',
         commonjs: 'lodash',
         amd: 'lodash',
-        root: '_', // indicates global variable
+        root: '_',
+    };
+
+    const reactAce = {
+        commonjs2: 'react-ace',
+        commonjs: 'react-ace',
+        amd: 'react-ace',
+    };
+
+    const standAloneBabel = {
+        commonjs2: '@babel/standalone',
+        commonjs: '@babel/standalone',
+        amd: '@babel/standalone',
     };
 
     return {
         react,
         lodash,
         'react-dom': reactDom,
+
+        '@babel/standalone': standAloneBabel,
+        // 'react-ace': reactAce,
+        // ...getAceBuilds(),
     };
 };
 

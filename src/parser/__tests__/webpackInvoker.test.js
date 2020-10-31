@@ -12,11 +12,6 @@ import sumAsDefaultImportingMultipleLevelsMock from '../__mocks__/sumAsDefaultIm
 global.__webpack_require__ = function (id) {};
 global.__webpack_require__.m = [{ './node_modules/react': {} }];
 
-jest.mock('../helpers', () => ({
-    resolve: (p) => p,
-    isItMeaningful: () => true,
-}));
-
 describe('webpackInvoker', () => {
     let left;
     let right;
@@ -71,8 +66,8 @@ describe('webpackInvoker', () => {
     });
 
     it('should invoke the module with sum and subtract as a members and they are exported from other modules', async () => {
-        const { exports } = jsInvoke(await render(sumAndSubtractionFromOtherModulesMock));
-        const { sum, subtract } = exports;
+        const c = jsInvoke(await render(sumAndSubtractionFromOtherModulesMock));
+        const { sum, subtract } = c.exports;
 
         const sumResult = sum(left, right);
         const subtractionResult = subtract(left, right);

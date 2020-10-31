@@ -3,13 +3,21 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { render } from 'react-dom';
 import Playground from '../src';
-import sampleReactComponent from './sampleReactComponent';
+import sampleReactProject from './sampleReactProject';
 
-import '../src/themes/unicorns.css';
+import '../src/themes/charcoal.css';
+
+function Comp() {
+    return (
+        <div>
+            <Playground lilProject={sampleReactProject} />
+        </div>
+    );
+}
 
 render(
     <StrictMode>
-        <Playground initialContext={sampleReactComponent} />
+        <Comp />
     </StrictMode>,
     document.querySelector('#root'),
 );

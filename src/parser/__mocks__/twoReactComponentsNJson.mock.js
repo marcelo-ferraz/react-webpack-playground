@@ -1,6 +1,6 @@
 export default {
     entries: {
-        './app.js': `
+        './App.js': `
 import React from "react";
 import Component2 from "./component-2";
 import data from "./someData.json";

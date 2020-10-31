@@ -1,6 +1,6 @@
 export default {
     entries: {
-        './app.js': `
+        './App.js': `
 import subtract from './subtraction.js';
 import sum from './sum.js';
 

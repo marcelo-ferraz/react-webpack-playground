@@ -1,43 +1,31 @@
 import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import path from 'path';
-
 import CodeEditor from './CodeEditor';
 import editorMode from './editorMode';
-
-import './editor.scss';
 import EditorTab from './EditorTab';
 import getKeyWithCount from './getKeywithCount';
 import tabDirection from './tabDirection';
 
-const renameImpl = (context) => (oldName, newName) => {
-    if (oldName === newName) {
-        return;
-    }
+import './editor.scss';
 
-    if (!context.entries[newName]) {
-        triggerRename(oldName, newName);
-        setSelectedEntry(newName);
-        return;
-    }
-
-    const newKey = getKeyWithCount(context.entries, newName);
-    triggerRename(oldName, newKey);
-    setSelectedEntry(newKey);
-};
-
-export default function Editor({ context = {}, onChange: triggerChange, onRename: triggerRename }) {
-    const [selectedEntry, setSelectedEntry] = useState('./app.js');
+export default function Editor({
+    defaultPath,
+    project = {},
+    onChange: triggerChange,
+    onRename: triggerRename,
+}) {
+    const [selectedEntry, setSelectedEntry] = useState(defaultPath);
     const [language, setLanguage] = useState();
     const [code, setCode] = useState();
 
     useLayoutEffect(() => {
-        if (!context.entries) {
+        if (!project.entries) {
             return;
         }
 
-        setCode(context.entries[selectedEntry]);
+        setCode(project.entries[selectedEntry]);
         setLanguage(path.extname(selectedEntry) || '.js');
-    }, [context.entries, selectedEntry]);
+    }, [project.entries, selectedEntry]);
 
     const selectEntry = (entryName, content) => {
         setCode(content);
@@ -46,16 +34,30 @@ export default function Editor({ context = {}, onChange: triggerChange, onRename
     };
 
     const addEntry = () => {
-        const newKey = getKeyWithCount(context.entries, './new file', '.js');
+        const newKey = getKeyWithCount(project.entries, './new file', '.js');
         triggerChange(newKey, '');
     };
 
-    const items = useMemo(() => context.entries && Object.entries(context.entries), [
-        context.entries,
+    const items = useMemo(() => project.entries && Object.entries(project.entries), [
+        project.entries,
     ]);
 
     const [tabs, dropDownItems] = useMemo(() => {
-        const rename = renameImpl(context);
+        const rename = (oldName, newName) => {
+            if (oldName === newName) {
+                return;
+            }
+
+            if (!project.entries[newName]) {
+                triggerRename(oldName, newName);
+                setSelectedEntry(newName);
+                return;
+            }
+
+            const newKey = getKeyWithCount(project.entries, newName);
+            triggerRename(oldName, newKey);
+            setSelectedEntry(newKey);
+        };
 
         return [
             items.map(([name, text]) => (
@@ -77,7 +79,7 @@ export default function Editor({ context = {}, onChange: triggerChange, onRename
                 </div>
             )),
         ];
-    }, [items, context, selectedEntry]);
+    }, [items, project.entries, triggerRename, selectedEntry]);
 
     const moveSelectedTab = useCallback(
         (direction) => {
@@ -110,7 +112,9 @@ export default function Editor({ context = {}, onChange: triggerChange, onRename
                     <div className="dropdown-content">{dropDownItems}</div>
                 </div>
 
-                <div className="rows grow tabs">{tabs}</div>
+                <div className="grow tabs">
+                    <div className="rows">{tabs}</div>
+                </div>
                 <button className="newTab" type="button" onClick={addEntry}>
                     +
                 </button>

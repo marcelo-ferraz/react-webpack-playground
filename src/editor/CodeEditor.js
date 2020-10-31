@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import AceEditor from 'react-ace';
 
-import 'ace-builds/src-noconflict/mode-javascript';
-import 'ace-builds/src-noconflict/mode-jsx';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-twilight';
+import 'ace-builds/src-min-noconflict/mode-javascript';
+import 'ace-builds/src-min-noconflict/mode-jsx';
+import 'ace-builds/src-min-noconflict/mode-json';
+import 'ace-builds/src-min-noconflict/theme-twilight';
 import 'ace-builds/src-min-noconflict/ext-language_tools';
-import 'ace-builds/src-noconflict/snippets/javascript';
-import 'ace-builds/src-noconflict/snippets/jsx';
+import 'ace-builds/src-min-noconflict/snippets/javascript';
+import 'ace-builds/src-min-noconflict/snippets/jsx';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
+import 'ace-builds/src-min-noconflict/ext-beautify';
 import 'ace-builds/webpack-resolver';
 
-import 'ace-builds/src-min-noconflict/ext-beautify';
 import tabDirection from './tabDirection';
 
 export default function CodeEditor({
@@ -48,7 +48,7 @@ export default function CodeEditor({
         <AceEditor
             ref={aceEditor}
             placeholder="Have fun!"
-            mode={mode}
+            mode={mode || 'javascript'}
             theme="twilight"
             name="codeEditor"
             onChange={triggerCodeChange}

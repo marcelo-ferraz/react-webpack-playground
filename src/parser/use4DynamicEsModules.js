@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
 import stage from './stage';
-import { isItMeaningful } from './helpers';
-
 import { render as webpackRender, jsInvoke, defaultEntryPath } from '../parser/webpackInvoker';
 
 export default function use4DynamicEsModules(context, defaultEntry) {

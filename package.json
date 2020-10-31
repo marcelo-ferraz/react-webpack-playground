@@ -1,13 +1,16 @@
 {
     "name": "react-webpack-playground",
-    "version": "1.0.0-themes.19",
+    "version": "1.0.0-big-bundle-fix.28",
     "description": "A playground",
     "main": "index.js",
     "module": "src/index.js",
     "files": [
-        "dist",
-        "src"
+        "dist/**/*"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marcelo-ferraz/react-webpack-playground"
+    },
     "scripts": {
         "lint": "eslint ./src",
         "lint:fix": "eslint --fix ./src",
@@ -21,7 +24,7 @@
         "start": "webpack-dev-server --config ./config/webpack.demo.config.js --mode development",
         "up:version": "node ./writeVersion.js"
     },
-    "author": "marcelo-ferraz",
+    "author": "marcelo-ferraz <marcelosfm@gmail.com> (https://github.com/marcelo-ferraz/)",
     "license": "ISC",
     "dependencies": {
         "@babel/core": "^7.11.6",
@@ -32,9 +35,9 @@
         "babel-loader": "^8.1.0",
         "core-js": "^3.6.5",
         "lodash": "^4.17.20",
-        "react": "^16.13.1",
+        "react": "^17.0.0",
         "react-ace": "^9.1.4",
-        "react-dom": "^16.13.1",
+        "react-dom": "^17.0.0",
         "regenerator-runtime": "^0.13.7"
     },
     "devDependencies": {
@@ -48,6 +51,7 @@
         "babel-eslint": "^10.1.0",
         "babel-jest": "^26.3.0",
         "babel-plugin-lodash": "^3.3.4",
+        "copy-webpack-plugin": "^6.2.1",
         "css-loader": "^4.3.0",
         "eslint": "^7.10.0",
         "eslint-config-prettier": "^6.12.0",
