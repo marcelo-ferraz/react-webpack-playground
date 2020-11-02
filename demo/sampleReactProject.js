@@ -15,8 +15,11 @@ export default function App() {
                 <p>Change here to start seeing {text}</p>
             </div>
             <SomeMagic />
+            <img src="https://miro.medium.com/max/344/1*mPUc2fU1VPbW6gjbw1DjeQ.gif" />
         </NotReallyAMagicalContext.Provider>
-        { JSON.stringify(someData) }
+        <div>
+            this is from json: { JSON.stringify(someData) }
+        </div>
     </>);
 }
 `,
