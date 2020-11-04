@@ -21,6 +21,12 @@
         width: 30px;
         height: 24px;
 
+        &:hover {
+            .hamburger-inner-base {
+                background-color: var(--color-1);
+            }
+        }
+
         .hamburger-inner-base {
             position: absolute;
             width: 30px;
@@ -29,7 +35,7 @@
             transition-duration: 0.15s;
             transition-property: transform;
             border-radius: 4px;
-            background-color: var(--color-1);
+            background-color: var(--color-2);
         }
 
         .hamburger-inner {
