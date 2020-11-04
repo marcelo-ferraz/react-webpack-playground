@@ -5,6 +5,7 @@ import contextReducer from './contextReducer';
 
 import './Playground.scss';
 import { defaultEntryPath } from './parser/webpackInvoker';
+import SideMenu from './sideMenu';
 
 const defaultState = {
     entries: {
@@ -33,7 +34,10 @@ export default function Playground({ lilProject, defaultPath = defaultEntryPath 
 
     return (
         <div className="playground rows">
-            <div className="s-1 s-sm-1-2">
+            <div className="side-menu-container">
+                <SideMenu />
+            </div>
+            <div className="display-container">
                 <Display context={littleProject} ref={parser} defaultPath={defaultPath} />
             </div>
             <div className="s-1 s-sm-1-2">

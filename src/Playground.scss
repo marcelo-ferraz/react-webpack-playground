@@ -1,30 +1,29 @@
 :root {
     --color-1: #cb997e;
-    --color-2: #ddbea9;
-    --color-3: #ffe8d6;
-    --color-4: #b7b7a4;
-    --color-5: #a5a58d;
-    --color-6: #6b705c;
+    --color-2: #ffe8d6;
+    --color-3: #b7b7a4;
+    --color-4: #a5a58d;
+    --color-5: #6b705c;
 
-    --bkg-color: var(--color-3);
-    --editor-border-color: var(--color-5);
+    --bkg-color: var(--color-2);
+    --editor-border-color: var(--color-4);
 
-    --tab-bkg-color: var(--color-4);
-    --tab-color: var(--color-6);
-    --tab-bkg-color-hover: var(--color-3);
-    --tab-color-hover: var(--color-4);
-    --active-tab-bkg-color: var(--color-5);
-    --active-tab-color: var(--color-3);
+    --tab-bkg-color: var(--color-3);
+    --tab-color: var(--color-5);
+    --tab-bkg-color-hover: var(--color-2);
+    --tab-color-hover: var(--color-3);
+    --active-tab-bkg-color: var(--color-4);
+    --active-tab-color: var(--color-2);
     --active-tab-bkg-color-hover: var(--color-1);
-    --active-tab-color-hover: var(--color-3);
+    --active-tab-color-hover: var(--color-2);
 
     --renaming-tab-border-color: var(--color-1);
-    --renaming-tab-color: var(--color-3);
+    --renaming-tab-color: var(--color-2);
 
-    --close-btn-color: var(--color-5);
-    --close-btn-color-hover: var(--color-3);
+    --close-btn-color: var(--color-4);
+    --close-btn-color-hover: var(--color-2);
 
-    --display-border-color: var(--color-5);
+    --display-border-color: var(--color-4);
     --display-bkg-color: #e9e9e9;
 }
 
@@ -34,9 +33,18 @@ body {
     background-color: var(--bkg-color);
 }
 
+.playground {
+    .side-menu-container {
+        flex-basis: var(--one-unit);
+    }
+
+    .display-container {
+        flex-basis: calc(var(--one-unit) + (var(--two-units) * 5));
+    }
+}
 .regular-checkbox {
     -webkit-appearance: none;
-    background-color: var(--color-3);
+    background-color: var(--color-2);
     border: 1px solid #cacece;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
     padding: 9px;
@@ -54,7 +62,7 @@ body {
         border: 1px solid #adb8c0;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05),
             inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-        color: var(--color-3);
+        color: var(--color-2);
     }
     &:checked:after {
         content: '\2714';

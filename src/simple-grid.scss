@@ -1,6 +1,7 @@
 // from https://gist.github.com/marcelo-ferraz/f07c7a625eff7064c373b25b57914a80
 :root {
-    --one-unit: 8.33333%;
+    --two-units: 8.3333%;
+    --one-unit: 4.166%;
 }
 
 $xs-min: 30em;
@@ -134,315 +135,315 @@ $lg-min: 75em;
 
     > *,
     > .s-1-12 {
-        -ms-flex-preferred-size: var(--one-unit);
-        flex-basis: var(--one-unit);
+        -ms-flex-preferred-size: var(--two-units);
+        flex-basis: var(--two-units);
     }
     > .s-2-12,
     .s-1-6 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 2);
-        flex-basis: calc(var(--one-unit) * 2);
+        -ms-flex-preferred-size: calc(var(--two-units) * 2);
+        flex-basis: calc(var(--two-units) * 2);
     }
     > .s-3-12,
     .s-1-4 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 3);
-        flex-basis: calc(var(--one-unit) * 3);
+        -ms-flex-preferred-size: calc(var(--two-units) * 3);
+        flex-basis: calc(var(--two-units) * 3);
     }
     > .s-4-12,
     .s-2-6,
     .s-1-3 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 4);
-        flex-basis: calc(var(--one-unit) * 4);
+        -ms-flex-preferred-size: calc(var(--two-units) * 4);
+        flex-basis: calc(var(--two-units) * 4);
     }
     > .s-5-12 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 5);
-        flex-basis: calc(var(--one-unit) * 5);
+        -ms-flex-preferred-size: calc(var(--two-units) * 5);
+        flex-basis: calc(var(--two-units) * 5);
     }
     > .s-6-12,
     .s-3-6,
     .s-2-4,
     .s-1-2 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 6);
-        flex-basis: calc(var(--one-unit) * 6);
+        -ms-flex-preferred-size: calc(var(--two-units) * 6);
+        flex-basis: calc(var(--two-units) * 6);
     }
     > .s-7-12 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 7);
-        flex-basis: calc(var(--one-unit) * 7);
+        -ms-flex-preferred-size: calc(var(--two-units) * 7);
+        flex-basis: calc(var(--two-units) * 7);
     }
     > .s-8-12,
     .s-4-6,
     .s-2-3 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 8);
-        flex-basis: calc(var(--one-unit) * 8);
+        -ms-flex-preferred-size: calc(var(--two-units) * 8);
+        flex-basis: calc(var(--two-units) * 8);
     }
     > .s-9-12,
     .s-3-4 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 9);
-        flex-basis: calc(var(--one-unit) * 9);
+        -ms-flex-preferred-size: calc(var(--two-units) * 9);
+        flex-basis: calc(var(--two-units) * 9);
     }
     > .s-10-12,
     .s-5-6 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 10);
-        flex-basis: calc(var(--one-unit) * 10);
+        -ms-flex-preferred-size: calc(var(--two-units) * 10);
+        flex-basis: calc(var(--two-units) * 10);
     }
     > .s-11-12 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 11);
-        flex-basis: calc(var(--one-unit) * 11);
+        -ms-flex-preferred-size: calc(var(--two-units) * 11);
+        flex-basis: calc(var(--two-units) * 11);
     }
     > .s-12-12,
     .s-1 {
-        -ms-flex-preferred-size: calc(var(--one-unit) * 12);
-        flex-basis: calc(var(--one-unit) * 12);
+        -ms-flex-preferred-size: calc(var(--two-units) * 12);
+        flex-basis: calc(var(--two-units) * 12);
     }
 
     @media only screen and (max-width: $xs-min) {
         > .s-xs-1-12 {
-            -ms-flex-preferred-size: var(--one-unit);
-            flex-basis: var(--one-unit);
+            -ms-flex-preferred-size: var(--two-units);
+            flex-basis: var(--two-units);
         }
         > .s-xs-2-12,
         .s-xs-1-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 2);
-            flex-basis: calc(var(--one-unit) * 2);
+            -ms-flex-preferred-size: calc(var(--two-units) * 2);
+            flex-basis: calc(var(--two-units) * 2);
         }
         > .s-xs-3-12,
         .s-xs-1-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 3);
-            flex-basis: calc(var(--one-unit) * 3);
+            -ms-flex-preferred-size: calc(var(--two-units) * 3);
+            flex-basis: calc(var(--two-units) * 3);
         }
         > .s-xs-4-12,
         .s-xs-2-6,
         .s-xs-1-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 4);
-            flex-basis: calc(var(--one-unit) * 4);
+            -ms-flex-preferred-size: calc(var(--two-units) * 4);
+            flex-basis: calc(var(--two-units) * 4);
         }
         > .s-xs-5-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 5);
-            flex-basis: calc(var(--one-unit) * 5);
+            -ms-flex-preferred-size: calc(var(--two-units) * 5);
+            flex-basis: calc(var(--two-units) * 5);
         }
         > .s-xs-6-12,
         .s-xs-3-6,
         .s-xs-2-4,
         .s-xs-1-2 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 6);
-            flex-basis: calc(var(--one-unit) * 6);
+            -ms-flex-preferred-size: calc(var(--two-units) * 6);
+            flex-basis: calc(var(--two-units) * 6);
         }
         > .s-xs-7-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 7);
-            flex-basis: calc(var(--one-unit) * 7);
+            -ms-flex-preferred-size: calc(var(--two-units) * 7);
+            flex-basis: calc(var(--two-units) * 7);
         }
         > .s-xs-8-12,
         .s-xs-4-6,
         .s-xs-2-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 8);
-            flex-basis: calc(var(--one-unit) * 8);
+            -ms-flex-preferred-size: calc(var(--two-units) * 8);
+            flex-basis: calc(var(--two-units) * 8);
         }
         > .s-xs-9-12,
         .s-xs-3-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 9);
-            flex-basis: calc(var(--one-unit) * 9);
+            -ms-flex-preferred-size: calc(var(--two-units) * 9);
+            flex-basis: calc(var(--two-units) * 9);
         }
         > .s-xs-10-12,
         .s-xs-5-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 10);
-            flex-basis: calc(var(--one-unit) * 10);
+            -ms-flex-preferred-size: calc(var(--two-units) * 10);
+            flex-basis: calc(var(--two-units) * 10);
         }
         > .s-xs-11-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 11);
-            flex-basis: calc(var(--one-unit) * 11);
+            -ms-flex-preferred-size: calc(var(--two-units) * 11);
+            flex-basis: calc(var(--two-units) * 11);
         }
         > .s-xs-12-12,
         .s-xs-1 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 12);
-            flex-basis: calc(var(--one-unit) * 12);
+            -ms-flex-preferred-size: calc(var(--two-units) * 12);
+            flex-basis: calc(var(--two-units) * 12);
         }
     }
 
     @media screen and (min-width: $sm-min) {
         > .s-sm-1-12 {
-            -ms-flex-preferred-size: var(--one-unit);
-            flex-basis: var(--one-unit);
+            -ms-flex-preferred-size: var(--two-units);
+            flex-basis: var(--two-units);
         }
         > .s-sm-2-12,
         .s-sm-1-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 2);
-            flex-basis: calc(var(--one-unit) * 2);
+            -ms-flex-preferred-size: calc(var(--two-units) * 2);
+            flex-basis: calc(var(--two-units) * 2);
         }
         > .s-sm-3-12,
         .s-sm-1-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 3);
-            flex-basis: calc(var(--one-unit) * 3);
+            -ms-flex-preferred-size: calc(var(--two-units) * 3);
+            flex-basis: calc(var(--two-units) * 3);
         }
         > .s-sm-4-12,
         .s-sm-2-6,
         .s-sm-1-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 4);
-            flex-basis: calc(var(--one-unit) * 4);
+            -ms-flex-preferred-size: calc(var(--two-units) * 4);
+            flex-basis: calc(var(--two-units) * 4);
         }
         > .s-sm-5-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 5);
-            flex-basis: calc(var(--one-unit) * 5);
+            -ms-flex-preferred-size: calc(var(--two-units) * 5);
+            flex-basis: calc(var(--two-units) * 5);
         }
         > .s-sm-6-12,
         .s-sm-3-6,
         .s-sm-2-4,
         .s-sm-1-2 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 6);
-            flex-basis: calc(var(--one-unit) * 6);
+            -ms-flex-preferred-size: calc(var(--two-units) * 6);
+            flex-basis: calc(var(--two-units) * 6);
         }
         > .s-sm-7-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 7);
-            flex-basis: calc(var(--one-unit) * 7);
+            -ms-flex-preferred-size: calc(var(--two-units) * 7);
+            flex-basis: calc(var(--two-units) * 7);
         }
         > .s-sm-8-12,
         .s-sm-4-6,
         .s-sm-2-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 8);
-            flex-basis: calc(var(--one-unit) * 8);
+            -ms-flex-preferred-size: calc(var(--two-units) * 8);
+            flex-basis: calc(var(--two-units) * 8);
         }
         > .s-sm-9-12,
         .s-sm-3-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 9);
-            flex-basis: calc(var(--one-unit) * 9);
+            -ms-flex-preferred-size: calc(var(--two-units) * 9);
+            flex-basis: calc(var(--two-units) * 9);
         }
         > .s-sm-10-12,
         .s-sm-5-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 10);
-            flex-basis: calc(var(--one-unit) * 10);
+            -ms-flex-preferred-size: calc(var(--two-units) * 10);
+            flex-basis: calc(var(--two-units) * 10);
         }
         > .s-sm-11-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 11);
-            flex-basis: calc(var(--one-unit) * 11);
+            -ms-flex-preferred-size: calc(var(--two-units) * 11);
+            flex-basis: calc(var(--two-units) * 11);
         }
         > .s-sm-12-12,
         .s-sm-1 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 12);
-            flex-basis: calc(var(--one-unit) * 12);
+            -ms-flex-preferred-size: calc(var(--two-units) * 12);
+            flex-basis: calc(var(--two-units) * 12);
         }
     }
 
     @media screen and (min-width: $md-min) {
         > .s-md-1-12 {
-            -ms-flex-preferred-size: var(--one-unit);
-            flex-basis: var(--one-unit);
+            -ms-flex-preferred-size: var(--two-units);
+            flex-basis: var(--two-units);
         }
         > .s-md-2-12,
         .s-md-1-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 2);
-            flex-basis: calc(var(--one-unit) * 2);
+            -ms-flex-preferred-size: calc(var(--two-units) * 2);
+            flex-basis: calc(var(--two-units) * 2);
         }
         > .s-md-3-12,
         .s-md-1-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 3);
-            flex-basis: calc(var(--one-unit) * 3);
+            -ms-flex-preferred-size: calc(var(--two-units) * 3);
+            flex-basis: calc(var(--two-units) * 3);
         }
         > .s-md-4-12,
         .s-md-2-6,
         .s-md-1-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 4);
-            flex-basis: calc(var(--one-unit) * 4);
+            -ms-flex-preferred-size: calc(var(--two-units) * 4);
+            flex-basis: calc(var(--two-units) * 4);
         }
         > .s-md-5-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 5);
-            flex-basis: calc(var(--one-unit) * 5);
+            -ms-flex-preferred-size: calc(var(--two-units) * 5);
+            flex-basis: calc(var(--two-units) * 5);
         }
         > .s-md-6-12,
         .s-md-3-6,
         .s-md-2-4,
         .s-md-1-2 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 6);
-            flex-basis: calc(var(--one-unit) * 6);
+            -ms-flex-preferred-size: calc(var(--two-units) * 6);
+            flex-basis: calc(var(--two-units) * 6);
         }
         > .s-md-7-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 7);
-            flex-basis: calc(var(--one-unit) * 7);
+            -ms-flex-preferred-size: calc(var(--two-units) * 7);
+            flex-basis: calc(var(--two-units) * 7);
         }
         > .s-md-8-12,
         .s-md-4-6,
         .s-md-2-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 8);
-            flex-basis: calc(var(--one-unit) * 8);
+            -ms-flex-preferred-size: calc(var(--two-units) * 8);
+            flex-basis: calc(var(--two-units) * 8);
         }
         > .s-md-9-12,
         .s-md-3-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 9);
-            flex-basis: calc(var(--one-unit) * 9);
+            -ms-flex-preferred-size: calc(var(--two-units) * 9);
+            flex-basis: calc(var(--two-units) * 9);
         }
         > .s-md-10-12,
         .s-md-5-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 10);
-            flex-basis: calc(var(--one-unit) * 10);
+            -ms-flex-preferred-size: calc(var(--two-units) * 10);
+            flex-basis: calc(var(--two-units) * 10);
         }
         > .s-md-11-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 11);
-            flex-basis: calc(var(--one-unit) * 11);
+            -ms-flex-preferred-size: calc(var(--two-units) * 11);
+            flex-basis: calc(var(--two-units) * 11);
         }
         > .s-md-12-12,
         .s-md-1 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 12);
-            flex-basis: calc(var(--one-unit) * 12);
+            -ms-flex-preferred-size: calc(var(--two-units) * 12);
+            flex-basis: calc(var(--two-units) * 12);
         }
     }
 
     @media screen and (min-width: $lg-min) {
         > .s-lg-1-12 {
-            -ms-flex-preferred-size: var(--one-unit);
-            flex-basis: var(--one-unit);
+            -ms-flex-preferred-size: var(--two-units);
+            flex-basis: var(--two-units);
         }
         > .s-lg-2-12,
         .s-lg-1-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 2);
-            flex-basis: calc(var(--one-unit) * 2);
+            -ms-flex-preferred-size: calc(var(--two-units) * 2);
+            flex-basis: calc(var(--two-units) * 2);
         }
         > .s-lg-3-12,
         .s-lg-1-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 3);
-            flex-basis: calc(var(--one-unit) * 3);
+            -ms-flex-preferred-size: calc(var(--two-units) * 3);
+            flex-basis: calc(var(--two-units) * 3);
         }
         > .s-lg-4-12,
         .s-lg-2-6,
         .s-lg-1-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 4);
-            flex-basis: calc(var(--one-unit) * 4);
+            -ms-flex-preferred-size: calc(var(--two-units) * 4);
+            flex-basis: calc(var(--two-units) * 4);
         }
         > .s-lg-5-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 5);
-            flex-basis: calc(var(--one-unit) * 5);
+            -ms-flex-preferred-size: calc(var(--two-units) * 5);
+            flex-basis: calc(var(--two-units) * 5);
         }
         > .s-lg-6-12,
         .s-lg-3-6,
         .s-lg-2-4,
         .s-lg-1-2 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 6);
-            flex-basis: calc(var(--one-unit) * 6);
+            -ms-flex-preferred-size: calc(var(--two-units) * 6);
+            flex-basis: calc(var(--two-units) * 6);
         }
         > .s-lg-7-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 7);
-            flex-basis: calc(var(--one-unit) * 7);
+            -ms-flex-preferred-size: calc(var(--two-units) * 7);
+            flex-basis: calc(var(--two-units) * 7);
         }
         > .s-lg-8-12,
         .s-lg-4-6,
         .s-lg-2-3 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 8);
-            flex-basis: calc(var(--one-unit) * 8);
+            -ms-flex-preferred-size: calc(var(--two-units) * 8);
+            flex-basis: calc(var(--two-units) * 8);
         }
         > .s-lg-9-12,
         .s-lg-3-4 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 9);
-            flex-basis: calc(var(--one-unit) * 9);
+            -ms-flex-preferred-size: calc(var(--two-units) * 9);
+            flex-basis: calc(var(--two-units) * 9);
         }
         > .s-lg-10-12,
         .s-lg-5-6 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 10);
-            flex-basis: calc(var(--one-unit) * 10);
+            -ms-flex-preferred-size: calc(var(--two-units) * 10);
+            flex-basis: calc(var(--two-units) * 10);
         }
         > .s-lg-11-12 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 11);
-            flex-basis: calc(var(--one-unit) * 11);
+            -ms-flex-preferred-size: calc(var(--two-units) * 11);
+            flex-basis: calc(var(--two-units) * 11);
         }
         > .s-lg-12-12,
         .s-lg-1 {
-            -ms-flex-preferred-size: calc(var(--one-unit) * 12);
-            flex-basis: calc(var(--one-unit) * 12);
+            -ms-flex-preferred-size: calc(var(--two-units) * 12);
+            flex-basis: calc(var(--two-units) * 12);
         }
     }
 }
