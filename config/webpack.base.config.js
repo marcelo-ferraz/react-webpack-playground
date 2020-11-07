@@ -4,7 +4,7 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const jsRule = {
     test: /\.jsx?$/i,
-    exclude: /(node_modules)((?!(@local|@fraedom)).)+$/,
+    exclude: /(node_modules).+$/,
     loader: 'babel-loader',
     options: {
         presets: ['@babel/preset-env', '@babel/preset-react'],
@@ -13,21 +13,23 @@ const jsRule = {
 
 const cssRule = {
     test: /\.s?css$/i,
-    exclude: [/(node_modules)((?!(@local|@fraedom)).)+$/, /\.module\.scss$/i],
+    exclude: [/node_modules/, /\.module\.s?css$/i],
     use: ['style-loader', 'css-loader', 'sass-loader'],
 };
 
 const cssModuleRule = {
-    test: /\.module\.scss$/i,
-    exclude: /(node_modules)/,
+    test: /.scss$/i,
+    include: /\.module\.s?css$/i,
+    exclude: /node_modules/,
     use: [
-        {
-            loader: 'style-loader',
-            options: { injectType: 'lazyStyleTag' },
-        },
+        'style-loader',
         {
             loader: 'css-loader',
-            options: { esModule: true, localsConvention: 'camelCase' },
+            options: {
+                esModule: true,
+                importLoaders: 1,
+                modules: { exportLocalsConvention: 'camelCase' },
+            },
         },
         'sass-loader',
     ],
@@ -51,7 +53,7 @@ const fileRule = {
 
 module.exports = {
     module: {
-        rules: [jsRule, cssRule, cssModuleRule, fontsRule, htmlRule, fileRule],
+        rules: [jsRule, cssModuleRule, cssRule, fontsRule, htmlRule, fileRule],
     },
     plugins: [
         // new BundleAnalyzerPlugin(),
