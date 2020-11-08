@@ -5,7 +5,7 @@ import contextReducer from './contextReducer';
 
 import './Playground.scss';
 import { defaultEntryPath } from './parser/webpackInvoker';
-import SideMenu from './sideMenu';
+import Menu from './Menu';
 
 const defaultState = {
     entries: {
@@ -14,7 +14,7 @@ const defaultState = {
 };
 
 export default function Playground({ lilProject, defaultPath = defaultEntryPath }) {
-    const [littleProject, dispatch] = useReducer(contextReducer, defaultState);
+    const [lilProj, dispatch] = useReducer(contextReducer, defaultState);
     const parser = useRef();
 
     const saveEntry = (key, value) => {
@@ -35,14 +35,14 @@ export default function Playground({ lilProject, defaultPath = defaultEntryPath 
     return (
         <div className="playground rows">
             <div className="side-menu-container">
-                <SideMenu />
+                <Menu currentProject={lilProj} />
             </div>
             <div className="display-container">
-                <Display context={littleProject} ref={parser} defaultPath={defaultPath} />
+                <Display project={lilProj} ref={parser} defaultPath={defaultPath} />
             </div>
             <div className="s-1 s-sm-1-2">
                 <Editor
-                    project={littleProject}
+                    project={lilProj}
                     defaultPath={defaultPath}
                     onRename={renameEntry}
                     onChange={saveEntry}

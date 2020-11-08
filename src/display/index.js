@@ -6,7 +6,7 @@ import DisplayBody from './DynamicBody';
 
 import './display.scss';
 
-export default forwardRef(({ context, defaultPath }, ref) => {
+export default forwardRef(({ project, defaultPath }, ref) => {
     const invokationRef = useRef();
     const boundariesRef = useRef();
 
@@ -44,7 +44,7 @@ export default forwardRef(({ context, defaultPath }, ref) => {
             </div>
             <div className="grow dynamic">
                 <ErrorBoundary fatal ref={boundariesRef}>
-                    <DisplayBody defaultPath={defaultPath} ref={invokationRef} context={context} />
+                    <DisplayBody defaultPath={defaultPath} ref={invokationRef} context={project} />
                 </ErrorBoundary>
             </div>
         </div>
