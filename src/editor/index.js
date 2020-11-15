@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import path from 'path';
 import CodeEditor from './CodeEditor';
 import editorMode from './editorMode';
@@ -7,14 +7,10 @@ import getKeyWithCount from './getKeywithCount';
 import tabDirection from './tabDirection';
 
 import './editor.scss';
+import PlaygroundContext from '../PlaygroundContext';
 
-export default function Editor({
-    defaultPath,
-    project = {},
-    onChange: triggerChange,
-    onRename: triggerRename,
-}) {
-    const [selectedEntry, setSelectedEntry] = useState(defaultPath);
+export default function Editor({ project = {}, onChange: triggerChange, onRename: triggerRename }) {
+    const { selectedEntry, setSelectedEntry } = useContext(PlaygroundContext);
     const [language, setLanguage] = useState();
     const [code, setCode] = useState();
 

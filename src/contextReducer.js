@@ -21,6 +21,12 @@ export default function contextReducer(state, { type, payload }) {
                     ...payload,
                 },
             };
+        case 'set-selected-entry': {
+            return {
+                ...state,
+                selectedEntry: payload.entry,
+            };
+        }
         default:
             return state;
     }

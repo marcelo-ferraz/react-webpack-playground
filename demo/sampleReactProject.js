@@ -1,4 +1,5 @@
 export default {
+    name: 'sample-project',
     entries: {
         './App.js': `import React, {useState} from "react";
 import NotReallyAMagicalContext from './NotReallyAMagicalContext';

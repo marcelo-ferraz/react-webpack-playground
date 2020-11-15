@@ -1,0 +1,42 @@
+.proj-structure {
+    padding: 8px 4px;
+
+    > h2 {
+        margin: 0;
+    }
+    > ul {
+        margin-top: 0;
+    }
+
+    li,
+    ul {
+        cursor: pointer;
+        list-style: none;
+        padding: 0;
+    }
+
+    ul {
+        padding: 2px 5px 2px 12px;
+    }
+    li > div {
+        vertical-align: middle;
+        &:hover {
+            background-color: var(--active-bkg-color-hover);
+            color: var(--active-font-color-hover);
+        }
+        .selected {
+            float: right;
+        }
+    }
+
+    svg {
+        font-size: 1.25em;
+        vertical-align: middle;
+        padding-right: 2px;
+    }
+
+    .closed {
+        height: 0;
+        overflow: hidden;
+    }
+}

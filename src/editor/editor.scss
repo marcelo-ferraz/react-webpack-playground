@@ -64,8 +64,8 @@ $editor-border: 4px;
     .tab {
         cursor: default;
         padding: 8px 0;
-        background-color: var(--tab-bkg-color);
-        color: var(--tab-color);
+        background-color: var(--bkg-color);
+        color: var(--font-color);
         border: 0;
 
         text-align: center;
@@ -79,25 +79,25 @@ $editor-border: 4px;
         }
 
         &:hover {
-            background-color: var(--tab-bkg-color-hover);
-            color: var(--tab-color-hover);
+            background-color: var(--bkg-color-hover);
+            color: var(--color-hover);
         }
 
         &.active,
         .active {
-            background-color: var(--active-tab-bkg-color);
-            color: var(--active-tab-color);
+            background-color: var(--active-bkg-color);
+            color: var(--active-color);
 
             .closeBtn {
-                color: var(--active-tab-color);
+                color: var(--active-color);
             }
 
             &:hover {
-                background-color: var(--active-tab-bkg-color-hover);
-                color: var(--active-tab-color-hover);
+                background-color: var(--active-bkg-color-hover);
+                color: var(--active-color-hover);
 
                 .closeBtn {
-                    color: var(--active-tab-color-hover);
+                    color: var(--active-color-hover);
                 }
             }
         }
@@ -105,13 +105,13 @@ $editor-border: 4px;
         .closeBtn {
             border: none;
             background: transparent;
-            color: var(--tab-color);
+            color: var(--font-color);
             border-radius: 69%;
             height: 100%;
             width: 100%;
 
             &:hover {
-                color: var(--tab-color-hover);
+                color: var(--color-hover);
             }
         }
 
@@ -124,9 +124,9 @@ $editor-border: 4px;
             padding-bottom: 4px;
             input {
                 border: none;
-                border-bottom: solid 2px var(--renaming-tab-border-color);
+                border-bottom: solid 2px var(--renaming-border-color);
                 background-color: transparent;
-                color: var(--renaming-tab-color);
+                color: var(--renaming-color);
                 animation: blink 1000ms infinite;
                 -webkit-animation: blink 1000ms infinite;
 
@@ -154,8 +154,8 @@ $editor-border: 4px;
             transition: visibility 0s 0.2s, opacity 0.3s linear;
             position: absolute;
             text-align: left;
-            background-color: var(--tab-bkg-color);
-            color: var(--tab-color);
+            background-color: var(--bkg-color);
+            color: var(--font-color);
             min-width: 160px;
             max-height: 500px;
             overflow-x: hidden;
@@ -169,15 +169,15 @@ $editor-border: 4px;
                 display: block;
 
                 &:hover {
-                    background-color: var(--tab-bkg-color-hover);
+                    background-color: var(--bkg-color-hover);
 
                     &.active,
                     .active {
-                        background-color: var(--active-tab-bkg-color);
-                        color: var(--active-tab-color);
+                        background-color: var(--active-bkg-color);
+                        color: var(--active-color);
                         &:hover {
-                            background-color: var(--active-tab-bkg-color-hover);
-                            color: var(--active-tab-color-hover);
+                            background-color: var(--active-bkg-color-hover);
+                            color: var(--active-color-hover);
                         }
                     }
                 }
@@ -191,7 +191,7 @@ $editor-border: 4px;
         }
 
         &:hover .dropbtn {
-            background-color: var(--tab-color-hover);
+            background-color: var(--color-hover);
         }
     }
 }

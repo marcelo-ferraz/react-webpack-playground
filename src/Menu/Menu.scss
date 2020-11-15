@@ -9,8 +9,8 @@ $menu-line-height: 54px;
 
     .bar {
         position: absolute;
-        background-color: var(--color-5);
-        color: var(--color-2);
+        background-color: var(--bkg-color);
+        color: var(--font-color);
         z-index: 99;
     }
 
@@ -35,22 +35,45 @@ $menu-line-height: 54px;
             height: inherit;
         }
 
+        .menu-icon {
+            cursor: pointer;
+            padding: 8px 0;
+            font-size: 2em;
+        }
+
         .menu {
             &.icons {
                 z-index: 1;
                 position: relative;
                 left: calc(var(--one-unit) * 20.5);
-                background-color: var(--color-5);
                 transition: left 0.5s ease-in-out;
                 height: calc(100% - #{$menu-line-height});
+                background-color: var(--bkg-color);
+                color: var(--font-color);
+
+                label {
+                    flex-basis: 100%;
+                    text-align: center;
+                }
 
                 svg {
+                    @extend .menu-icon;
                     flex-basis: 100%;
-                    padding: 8px 0;
                 }
             }
             &.body {
                 height: calc(100% - #{$menu-line-height});
+                padding: 4px 8px;
+                box-sizing: border-box;
+
+                > .bottom {
+                    text-align: end;
+                }
+
+                &.active:hover {
+                    background-color: var(--active-bkg-color);
+                    color: var(--active-font-color);
+                }
             }
             &.top {
                 height: $menu-line-height;
@@ -86,11 +109,6 @@ $menu-line-height: 54px;
             .menu.icons {
                 left: 0;
             }
-        }
-
-        & ~ .bottom-bar {
-            height: 40px;
-            width: 100%;
         }
 
         & ~ .overlay::after {
