@@ -6,15 +6,20 @@ import {
     AiOutlineFolder,
     AiOutlineFolderOpen,
     AiFillCheckSquare,
+    AiOutlineBorder,
+    AiOutlineDoubleRight,
 } from 'react-icons/ai';
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact } from 'react-icons/di';
 import { GoPencil } from 'react-icons/go';
+
+import { MdArrowForward, MdLabel, MdLabelOutline } from 'react-icons/md';
 
 import { extname } from 'path';
 
 import './ProjStructure.scss';
 import PlaygroundContext from '../PlaygroundContext';
 import { FaChevronRight } from 'react-icons/fa';
+import CheckBox from '../Checkbox';
 
 const getFileIcon = (filename) => {
     const ext = extname(filename);
@@ -46,23 +51,23 @@ function TreeItem({ name, entries }) {
                 if (typeof value === 'string') {
                     return (
                         <li key={`fl-${itemKey}`}>
-                            <div onClick={() => setSelectedEntry(itemKey)}>
-                                {getFileIcon(itemKey)}
-                                {selectedEntry === itemKey ? (
-                                    <>
-                                        <b>{itemKey}</b>
-                                        <FaChevronRight className="selected" />
-                                    </>
-                                ) : (
+                            {selectedEntry === itemKey ? (
+                                <div className="selected" onClick={() => setSelectedEntry(itemKey)}>
+                                    <MdLabel />
+                                    {getFileIcon(itemKey)}
+                                    <b>{itemKey}</b>
+                                </div>
+                            ) : (
+                                <div onClick={() => setSelectedEntry(itemKey)}>
+                                    {getFileIcon(itemKey)}
                                     <span>{itemKey}</span>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </li>
                     );
                 }
                 return <TreeItem key={`dir-${itemKey}`} name={itemKey} entries={value} />;
             }),
-        [entries, selectedEntry, setSelectedEntry],
     );
 
     return (
@@ -92,7 +97,7 @@ export default function ProjStructure({ project }) {
     return (
         <div className="proj-structure">
             <h2>
-                <AiFillCheckSquare />
+                <CheckBox title="Live refresh" />
                 {project.name || 'project'}
             </h2>
             <TreeItem name={'src'} entries={project.entries} />

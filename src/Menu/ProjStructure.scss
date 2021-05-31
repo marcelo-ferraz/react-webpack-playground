@@ -24,8 +24,8 @@
             background-color: var(--active-bkg-color-hover);
             color: var(--active-font-color-hover);
         }
-        .selected {
-            float: right;
+        &.selected {
+            margin-left: -22px;
         }
     }
 

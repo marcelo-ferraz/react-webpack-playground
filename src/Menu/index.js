@@ -10,6 +10,7 @@ import { AiFillCheckSquare, AiFillLinkedin } from 'react-icons/ai';
 
 import ProjStructure from './ProjStructure';
 import PlaygroundContext from '../PlaygroundContext';
+import CheckBox from '../Checkbox';
 
 export default function Menu() {
     const { currentProject } = useContext(PlaygroundContext);
@@ -35,7 +36,7 @@ export default function Menu() {
                         <div className="grow" />
                         <div className="rows align-items center start">
                             <VscRefresh />
-                            <AiFillCheckSquare />
+                            <CheckBox title="Live refresh" />
                         </div>
                     </div>
                     <div className="menu body active s-5-6 columns">
