@@ -5,7 +5,7 @@ import { render } from 'react-dom';
 import Playground from '../src';
 import sampleReactProject from './sampleReactProject';
 
-import '../src/themes/charcoal.css';
+// import '../src/themes/charcoal.css';
 
 function Comp() {
     return (
