@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useEffect, useRef } from 'react';
 
 import ErrorBoundary from './ErrorsBoundary';
-import stage from '../parser/stage';
+import stage from '../../parser/stage';
 import DisplayBody from './DynamicBody';
 
 import './display.scss';

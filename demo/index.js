@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 import Playground from '../src';
 import sampleReactProject from './sampleReactProject';
 
+// TODO: try changing the theme here
 // import '../src/themes/charcoal.css';
 
 function Comp() {

@@ -17,7 +17,7 @@ import { MdArrowForward, MdLabel, MdLabelOutline } from 'react-icons/md';
 import { extname } from 'path';
 
 import './ProjStructure.scss';
-import PlaygroundContext from '../PlaygroundContext';
+import PlaygroundContext from '../../PlaygroundContext';
 import { FaChevronRight } from 'react-icons/fa';
 import CheckBox from '../Checkbox';
 

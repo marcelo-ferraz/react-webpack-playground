@@ -1,5 +1,4 @@
 const path = require('path');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const baseConfig = require('./webpack.base.config');
 
 const getAceBuilds = () =>
@@ -87,5 +86,4 @@ module.exports = (_, argv) => ({
     },
     output: getOutput(),
     externals: getExternals(),
-    plugins: [...baseConfig.plugins, new ManifestPlugin()],
 });

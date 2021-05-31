@@ -2,41 +2,42 @@ export default {
     name: 'sample-project',
     entries: {
         './App.js': `import React, {useState} from "react";
-import NotReallyAMagicalContext from './NotReallyAMagicalContext';
-import SomeMagic from './SomeMagic';
+import JustAnOrdinaryContext from './JustAnOrdinaryContext';
+import ThisOneUsesStylesAndContext from './ThisOneUsesStylesAndContext';
 import someData from './some_data.json';
 
 export default function App() {
-    const [text, setText] = useState('some magic!');
+    const [text, setText] = useState('Johnny');
 
     return (<>
-        <NotReallyAMagicalContext.Provider value={{text, setText}}>
+        <JustAnOrdinaryContext.Provider value={{text, setText}}>
+            <ThisOneUsesStylesAndContext />
             <div className="App">
                 <h2>Oh, hello there</h2>
-                <p>Change here to start seeing {text}</p>
-            </div>
-            <SomeMagic />
-            { /*<img src="https://miro.medium.com/max/344/1*mPUc2fU1VPbW6gjbw1DjeQ.gif" /> */}
-        </NotReallyAMagicalContext.Provider>
-        <div>
-            this is from json: { JSON.stringify(someData) }
-        </div>
+                <p>And heere is {text}</p>
+            </div>            
+        </JustAnOrdinaryContext.Provider>
+
+        <img src="https://media3.giphy.com/media/8Ja3gouJQSg1i/giphy.gif?cid=ecf05e47xd038ul10h88izmtwn8uybju1t519uk9fd0pk3dy&rid=giphy.gif&ct=g" />
+            
+        <p>And from the json, this gif is from { someData.adverb } <b>{ someData.name }</b>.</p>
+        <p>This one still is {someData.opinion}...</p>
     </>);
-}
+}        
 `,
-        './NotReallyAMagicalContext': `import {createContext} from "react"
+        './JustAnOrdinaryContext': `import {createContext} from "react"
 
 export default createContext({ 
-    text: 'some magic!', 
+    text: 'Johnny', 
     setText: () => {},
 });
 
 `,
-        './SomeMagic.js': `import React, {useContext} from "react";
-import NotReallyAMagicalContext from './NotReallyAMagicalContext';
+        './ThisOneUsesStylesAndContext.js': `import React, {useContext} from "react";
+import JustAnOrdinaryContext from './JustAnOrdinaryContext';
 
-export default function SomeMagic() {
-    const {text, setText} = useContext(NotReallyAMagicalContext);
+export default function ThisOneUsesStylesAndContext() {
+    const {text, setText} = useContext(JustAnOrdinaryContext);
 
     return (<div 
         style={{ 
@@ -56,7 +57,11 @@ export default function SomeMagic() {
         </div>
     );
 }`,
-        './some_data.json': '{ "type": "dog", "nature": "lovely" }',
+        './some_data.json': `{ 
+    "adverb": "the mostly excellent", 
+    "name": "Johnny Castaway", 
+    "opinion": "my favorite screensaver" 
+}`,
     },
     getExraDependencies: () => ({}),
     beforeRender: (strategy) => {},

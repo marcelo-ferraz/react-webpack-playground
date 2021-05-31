@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import { version } from '../../package.json';
+import pkg from '../../../package.json';
 
 import './Menu.scss';
 
@@ -9,7 +9,7 @@ import { FaCubes } from 'react-icons/fa';
 import { AiFillCheckSquare, AiFillLinkedin } from 'react-icons/ai';
 
 import ProjStructure from './ProjStructure';
-import PlaygroundContext from '../PlaygroundContext';
+import PlaygroundContext from '../../PlaygroundContext';
 import CheckBox from '../Checkbox';
 
 export default function Menu() {
@@ -44,14 +44,22 @@ export default function Menu() {
                             <ProjStructure project={currentProject} />
                         </div>
                         <div className="bottom rows align-items center">
-                            <div className="grow">v.: {version}</div>
+                            <div className="menu-version grow">v.: {pkg.version}</div>
                             <GoMarkGithub
                                 className="menu-icon"
                                 title="Click here to check the Playground's repository"
+                                onClick={() => {
+                                    window.open(
+                                        'https://github.com/marcelo-ferraz/react-webpack-playground',
+                                    );
+                                }}
                             />
                             <AiFillLinkedin
                                 className="menu-icon"
                                 title="Click here to check my linkedIn profile"
+                                onClick={() => {
+                                    window.open('https://www.linkedin.com/in/marceloferraz/');
+                                }}
                             />
                         </div>
                     </div>

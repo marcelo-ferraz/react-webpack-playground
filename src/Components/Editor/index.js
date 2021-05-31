@@ -7,7 +7,7 @@ import getKeyWithCount from './getKeywithCount';
 import tabDirection from './tabDirection';
 
 import './editor.scss';
-import PlaygroundContext from '../PlaygroundContext';
+import PlaygroundContext from '../../PlaygroundContext';
 
 export default function Editor({ project = {}, onChange: triggerChange, onRename: triggerRename }) {
     const { selectedEntry, setSelectedEntry } = useContext(PlaygroundContext);
@@ -20,7 +20,7 @@ export default function Editor({ project = {}, onChange: triggerChange, onRename
         }
 
         setCode(project.entries[selectedEntry]);
-        setLanguage(path.extname(selectedEntry) || '.js');
+        setLanguage(selectedEntry ? path.extname(selectedEntry) : '.js');
     }, [project.entries, selectedEntry]);
 
     const selectEntry = (entryName, content) => {
@@ -34,9 +34,10 @@ export default function Editor({ project = {}, onChange: triggerChange, onRename
         triggerChange(newKey, '');
     };
 
-    const items = useMemo(() => project.entries && Object.entries(project.entries), [
-        project.entries,
-    ]);
+    const items = useMemo(
+        () => project.entries && Object.entries(project.entries),
+        [project.entries],
+    );
 
     const [tabs, dropDownItems] = useMemo(() => {
         const rename = (oldName, newName) => {
