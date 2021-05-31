@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useRef } from 'react';
 import Editor from '../Editor';
-import Display from '../Displays';
+import Display from '../Display';
 import contextReducer from '../../contextReducer';
 
 import { defaultEntryPath } from '../../parser/webpackInvoker';
