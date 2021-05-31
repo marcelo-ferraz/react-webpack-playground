@@ -1,6 +1,6 @@
 {
     "name": "react-webpack-playground",
-    "version": "1.0.0-alpha.20",
+    "version": "1.0.0-tests.31",
     "description": "A playground",
     "main": "index.js",
     "module": "src/index.js",
@@ -81,5 +81,10 @@
         "webpack-bundle-analyzer": "^4.4.2",
         "webpack-cli": "^4.7.0",
         "webpack-dev-server": "^3.11.2"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run up:version && git add ./package.json"
+        }
     }
 }
