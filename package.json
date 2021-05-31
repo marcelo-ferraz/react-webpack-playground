@@ -1,6 +1,6 @@
 {
     "name": "react-webpack-playground",
-    "version": "1.0.0-tests.32",
+    "version": "1.0.0-tests.33",
     "description": "A playground",
     "main": "index.js",
     "module": "src/index.js",
