@@ -44,14 +44,22 @@ export default function Menu() {
                             <ProjStructure project={currentProject} />
                         </div>
                         <div className="bottom rows align-items center">
-                            <div className="grow">v.: {pkg.version}</div>
+                            <div className="menu-version grow">v.: {pkg.version}</div>
                             <GoMarkGithub
                                 className="menu-icon"
                                 title="Click here to check the Playground's repository"
+                                onClick={() => {
+                                    window.open(
+                                        'https://github.com/marcelo-ferraz/react-webpack-playground',
+                                    );
+                                }}
                             />
                             <AiFillLinkedin
                                 className="menu-icon"
                                 title="Click here to check my linkedIn profile"
+                                onClick={() => {
+                                    window.open('https://www.linkedin.com/in/marceloferraz/');
+                                }}
                             />
                         </div>
                     </div>
