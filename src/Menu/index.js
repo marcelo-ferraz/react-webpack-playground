@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import { version } from '../../package.json';
+import pkg from '../../package.json';
 
 import './Menu.scss';
 
@@ -44,7 +44,7 @@ export default function Menu() {
                             <ProjStructure project={currentProject} />
                         </div>
                         <div className="bottom rows align-items center">
-                            <div className="grow">v.: {version}</div>
+                            <div className="grow">v.: {pkg.version}</div>
                             <GoMarkGithub
                                 className="menu-icon"
                                 title="Click here to check the Playground's repository"

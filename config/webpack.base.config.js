@@ -37,7 +37,9 @@ const cssModuleRule = {
 
 const fontsRule = {
     test: /\.(svg|woff|woff2|ttf|eot)(\?[\s\S]+)?$/,
-    loader: 'file-loader?name=./fonts/[name]-[hash].[ext]',
+    // loader: 'file-loader?name=./fonts/[name]-[hash].[ext]',
+    loader: 'file-loader',
+    options: { name: './fonts/[name]-[hash].[ext]' },
 };
 
 const htmlRule = {
@@ -54,6 +56,11 @@ const fileRule = {
 module.exports = {
     module: {
         rules: [jsRule, cssModuleRule, cssRule, fontsRule, htmlRule, fileRule],
+    },
+    resolve: {
+        fallback: {
+            path: require.resolve('path-browserify'),
+        },
     },
     plugins: [
         // new BundleAnalyzerPlugin(),
