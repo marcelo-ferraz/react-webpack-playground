@@ -1,12 +1,13 @@
 import React, { useEffect, useReducer, useRef } from 'react';
-import Editor from './editor';
-import Display from './display';
-import contextReducer from './contextReducer';
+import Editor from '../Editor';
+import Display from '../display';
+import contextReducer from '../../contextReducer';
+
+import { defaultEntryPath } from '../../parser/webpackInvoker';
+import Menu from '../Menu';
+import PlaygroundContext from '../../PlaygroundContext';
 
 import './Playground.scss';
-import { defaultEntryPath } from './parser/webpackInvoker';
-import Menu from './Menu';
-import PlaygroundContext from './PlaygroundContext';
 
 const defaultState = {
     entries: {

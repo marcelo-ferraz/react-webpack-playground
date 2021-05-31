@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import pkg from '../../package.json';
+import pkg from '../../../package.json';
 
 import './Menu.scss';
 
@@ -9,7 +9,7 @@ import { FaCubes } from 'react-icons/fa';
 import { AiFillCheckSquare, AiFillLinkedin } from 'react-icons/ai';
 
 import ProjStructure from './ProjStructure';
-import PlaygroundContext from '../PlaygroundContext';
+import PlaygroundContext from '../../PlaygroundContext';
 import CheckBox from '../Checkbox';
 
 export default function Menu() {

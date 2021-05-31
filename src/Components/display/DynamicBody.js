@@ -1,8 +1,8 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
-import use4DynamicEsModules from '../parser/use4DynamicEsModules';
+import use4DynamicEsModules from '../../parser/use4DynamicEsModules';
 import ErrorsExplained from './ErrorsExplained';
 import ErrorBoundary from './ErrorsBoundary';
-import stage from '../parser/stage';
+import stage from '../../parser/stage';
 
 const DisplayBody = forwardRef(({ context, defaultEntry }, ref) => {
     const invokation = use4DynamicEsModules(context, defaultEntry);

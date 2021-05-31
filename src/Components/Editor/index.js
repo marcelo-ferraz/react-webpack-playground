@@ -7,7 +7,7 @@ import getKeyWithCount from './getKeywithCount';
 import tabDirection from './tabDirection';
 
 import './editor.scss';
-import PlaygroundContext from '../PlaygroundContext';
+import PlaygroundContext from '../../PlaygroundContext';
 
 export default function Editor({ project = {}, onChange: triggerChange, onRename: triggerRename }) {
     const { selectedEntry, setSelectedEntry } = useContext(PlaygroundContext);
