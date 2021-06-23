@@ -1,18 +1,20 @@
-import { transform } from '@babel/standalone';
-import { find } from 'lodash';
 import { extname } from 'path';
 import { js, json, jsx } from '../fileExtensions';
 import { isItMeaningful } from './helpers';
 import { tryResolve } from './helpers';
 import MissingModuleError from './MissingModuleError';
+import transform2Js from './transform2Js';
 
-const byEqual = (path) => ([key]) =>
-    key === path || key === `${path}.js` || key === `${path}/index.js`;
+const byEqual =
+    (path) =>
+    ([key]) =>
+        key === path || key === `${path}.js` || key === `${path}/index.js`;
 
 const findByPath = (obj, path) => find(Object.entries(obj), byEqual(path)) || [];
 
 function findAllImports(code, whenFound) {
-    const findImports = /__customRequire\(__webpack_require__\,\s*\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
+    const findImports =
+        /__customRequire\(__webpack_require__\,\s*\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
     let match;
 
     do {
@@ -24,11 +26,6 @@ function findAllImports(code, whenFound) {
         }
     } while (match);
 }
-
-const parse = (rawCode) => {
-    const { code } = transform(rawCode, { presets: ['es2015', 'react'] });
-    return code.replace(/require\(/gm, '__customRequire(__webpack_require__, ');
-};
 
 const customRequireImpl = function (use = __webpack_require__, dependencies, path) {
     let fullPath = tryResolve(dependencies, path);
@@ -70,79 +67,22 @@ const loadAllExtraDependencies = async ({ getExtraDependencies }) => {
     }, {});
 };
 
+const parserWorker = new Worker(new URL('../workers/parserWorker', import.meta.url));
+
 export const defaultEntryPath = './App.js';
 
-export async function render(strategy, entryPath = null) {
-    let dependencies = {};
+export async function render(strategy, entryPath = defaultEntryPath) {
+    parserWorker.postMessage([strategy.entries, entryPath]);
 
-    const renderImpl = (path) => {
-        const [, rawCode] = findByPath(strategy.entries, path);
-        const unit = { i: `dynamic:${path}`, l: false, exports: {} };
-
-        if (!isItMeaningful(rawCode)) {
-            return { unit };
-        }
-
-        // eslint-disable-next-line no-unused-vars, no-underscore-dangle
-        function __customRequire(req, path) {
-            return customRequireImpl(req, dependencies, path);
-        }
-
-        function addToDependencies(deps, id) {
-            dependencies[id] = renderImpl(id, dependencies);
-        }
-
-        const type = extname(path);
-
-        switch (type) {
-            case '':
-            case js:
-            case jsx: {
-                const code = parse(rawCode);
-                findAllImports(code, (id) => {
-                    dependencies[id] = renderImpl(id, dependencies);
-                });
-                // eslint-disable-next-line no-eval
-                const func = eval(`(function(module, exports, __webpack_require__) { ${code} })`);
-                return {
-                    func,
-                    unit,
-                    customRequire: __customRequire,
-                };
+    return new Promise((resolve, reject) => {
+        parserWorker.onmessage = async ({ data: entries }) => {
+            try {
+                resolve(await renderImpl(entries, entryPath));
+            } catch (e) {
+                reject(e);
             }
-            case json: {
-                unit.exports = JSON.parse(rawCode);
-                return { unit };
-            }
-            default:
-                throw new TypeError(`The type "${type}" is not supported`);
-        }
-    };
-
-    // render the tree starting from the root (./app.js)
-    let extraDependencies = (await loadAllExtraDependencies(strategy)) || {};
-
-    if (strategy.beforeRender) {
-        extraDependencies = strategy.beforeRender(strategy, extraDependencies);
-    }
-
-    dependencies = { ...dependencies, ...extraDependencies };
-
-    const dynamicContext = renderImpl(entryPath || defaultEntryPath);
-
-    dynamicContext.customRequire = (path) =>
-        customRequireImpl(__webpack_require__, dependencies, path);
-    dynamicContext.addDependencies = (key, value) => {
-        dependencies = { ...dependencies, [key]: value };
-    };
-
-    dynamicContext.events = {
-        beforeRender: strategy.beforeRender,
-        beforeInvoke: strategy.beforeInvoke,
-        afterInvoke: strategy.afterInvoke,
-    };
-
-    return dynamicContext;
+        };
+    });
 }
 
 export function jsInvoke(context) {
@@ -163,4 +103,77 @@ export function jsInvoke(context) {
         }
     }
     return context.unit;
+}
+
+async function renderImpl(entries, entryPath) {
+    let dynamicContext = null;
+    let dependencies = {};
+
+    // this custom require is the entry point to the module system compiled in dev mode
+    // eslint-disable-next-line no-unused-vars, no-underscore-dangle
+    function __customRequire(req, path) {
+        return customRequireImpl(req, dependencies, path);
+    }
+
+    let extraDependencies = (await loadAllExtraDependencies(strategy)) || {};
+
+    if (strategy.beforeRender) {
+        extraDependencies = strategy.beforeRender(strategy, extraDependencies);
+    }
+
+    dependencies = { ...dependencies, ...extraDependencies };
+
+    for (const [path, entry] of Object.entries(entries)) {
+        const { ext, code } = entry;
+        const unit = { i: `dynamic:${path}`, l: false, exports: {} };
+
+        if (!code) {
+            continue;
+        }
+
+        switch (ext) {
+            case '':
+            case js:
+            case jsx: {
+                // eslint-disable-next-line no-eval
+                const func = eval(code);
+
+                const ctx = {
+                    func,
+                    unit,
+                    customRequire: __customRequire,
+                };
+
+                if (path === entryPath) {
+                    dynamicContext = ctx;
+                }
+
+                const id = path.endsWith(ext) ? path.substring(0, path.length - ext.length) : path;
+
+                dependencies[id] = ctx;
+                break;
+            }
+            case json: {
+                unit.exports = code;
+                dependencies[path] = { unit };
+                break;
+            }
+        }
+    }
+
+    if (dynamicContext && dynamicContext.func) {
+        dynamicContext.customRequire = (path) =>
+            customRequireImpl(__webpack_require__, dependencies, path);
+        dynamicContext.addDependencies = (key, value) => {
+            dependencies = { ...dependencies, [key]: value };
+        };
+
+        dynamicContext.events = {
+            beforeRender: strategy.beforeRender,
+            beforeInvoke: strategy.beforeInvoke,
+            afterInvoke: strategy.afterInvoke,
+        };
+
+        return dynamicContext;
+    }
 }

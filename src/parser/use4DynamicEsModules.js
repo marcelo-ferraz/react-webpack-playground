@@ -8,19 +8,20 @@ export default function use4DynamicEsModules(context, defaultEntry) {
     const [error, setError] = useState();
     const invokedComponent = useRef();
 
-    const render = async (entries, path = defaultEntryPath) => {
+    const render = async (project, path = defaultEntryPath) => {
         let phase = stage.rendering;
         try {
             setStatus(phase);
-            const ctx = await webpackRender(entries, path);
-
+            const ctx = await webpackRender(project, path);
             if (!ctx) {
                 setStatus(stage.notInvoked | stage.finished);
                 invokedComponent.current = null;
                 return;
             }
             setStatus((phase = stage.invoking));
+
             const { exports } = jsInvoke(ctx);
+
             invokedComponent.current = exports.default;
             setStatus(stage.invoked | stage.finished);
         } catch (err) {
