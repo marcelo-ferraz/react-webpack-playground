@@ -8,6 +8,7 @@ import Menu from '../Menu';
 import PlaygroundContext from '../../PlaygroundContext';
 
 import './Playground.scss';
+import use4DynamicEsModules from '../../transpiling/use4DynamicEsModules';
 
 const defaultEntryPath = `${transpilersDefaultEntryPath}.js`;
 
@@ -19,7 +20,7 @@ const defaultState = {
 
 export default function Playground({ lilProject, entryPath = defaultEntryPath }) {
     const [lilProj, dispatch] = useReducer(contextReducer, defaultState);
-    const parser = useRef();
+    const parser = use4DynamicEsModules(lilProj, entryPath);
 
     const setSelectedEntry = (entry) => {
         dispatch({ type: 'set-selected-entry', payload: { entry } });
@@ -54,7 +55,7 @@ export default function Playground({ lilProject, entryPath = defaultEntryPath })
                     <Menu />
                 </div>
                 <div className="display-container">
-                    <Display project={lilProj} ref={parser} defaultPath={entryPath} />
+                    <Display project={lilProj} parser={parser} defaultPath={entryPath} />
                 </div>
                 <div className="s-1 s-sm-1-2">
                     <Editor project={lilProj} onRename={renameEntry} onChange={saveEntry} />

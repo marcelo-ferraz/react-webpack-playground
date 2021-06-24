@@ -6,30 +6,14 @@ import DisplayBody from './DynamicBody';
 
 import './display.scss';
 
-const Display = ({ project, defaultPath }, ref) => {
-    const invokationRef = useRef();
+const Display = ({ parser, project, defaultPath }) => {
     const boundariesRef = useRef();
-
-    useImperativeHandle(ref, () => ({
-        forceRefresh: invokationRef.current ? invokationRef.current.forceRefresh : () => {},
-    }));
 
     return (
         <div className="display columns">
             <div className="s-1-12 rows tools">
-                <button
-                    className="refresh-btn"
-                    type="button"
-                    onClick={invokationRef.current && invokationRef.current.forceRefresh}
-                >
-                    <span
-                        className={
-                            invokationRef.current &&
-                            !stage.has(stage.invoked, invokationRef.current.status)
-                                ? 'rotating'
-                                : ''
-                        }
-                    >
+                <button className="refresh-btn" type="button" onClick={parser.forceRefresh}>
+                    <span className={!stage.has(stage.invoked, parser.status) ? 'rotating' : ''}>
                         ⭯
                     </span>
                 </button>
@@ -37,7 +21,7 @@ const Display = ({ project, defaultPath }, ref) => {
             </div>
             <div className="grow dynamic">
                 <ErrorBoundary fatal ref={boundariesRef}>
-                    <DisplayBody defaultPath={defaultPath} ref={invokationRef} context={project} />
+                    <DisplayBody parser={parser} defaultPath={defaultPath} context={project} />
                 </ErrorBoundary>
             </div>
         </div>

@@ -12,7 +12,7 @@ function parseNShake(findBy, path, parsedNShaken = {}) {
         case '':
         case js:
         case jsx: {
-            const id = path.endsWith(type) ? path.substring(0, path.length - type.length) : path;
+            const id = path.endsWith(type) ? path : `${path}.js`;
 
             if (parsedNShaken[id]) {
                 return parsedNShaken;

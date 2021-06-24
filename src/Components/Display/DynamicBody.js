@@ -4,43 +4,39 @@ import ErrorsExplained from './ErrorsExplained';
 import ErrorBoundary from './ErrorsBoundary';
 import stage from '../../transpiling/stage';
 
-const DisplayBody = ({ context, defaultEntry }, ref) => {
-    const invokation = use4DynamicEsModules(context, defaultEntry);
-
-    useImperativeHandle(ref, () => invokation);
-
+const DisplayBody = ({ parser }) => {
+    debugger;
     switch (true) {
-        case invokation.status === stage.rendering:
+        case parser.status === stage.rendering:
             return <div>Rendering the code</div>;
-        case invokation.status === stage.invoking:
+        case parser.status === stage.invoking:
             return <div>Invoking the code</div>;
-        case stage.has(invokation.status, stage.error | stage.rendering):
+        case stage.has(parser.status, stage.error | stage.rendering):
             return (
                 <ErrorsExplained
                     title="There was a problem during the rendering"
-                    error={invokation.error}
+                    error={parser.error}
                 />
             );
-        case stage.has(invokation.status, stage.error | stage.invoking):
+        case stage.has(parser.status, stage.error | stage.invoking):
             return (
                 <ErrorsExplained
                     title="There was a problem during the invoking of the module"
-                    error={invokation.error}
+                    error={parser.error}
                 />
             );
-        case stage.has(invokation.status, stage.error):
-            return <ErrorsExplained title="There was a problem" error={invokation.error} />;
-        case stage.has(invokation.status, stage.invoked | stage.finished) &&
-            !!invokation.component: {
-            const Component = invokation.component;
+        case stage.has(parser.status, stage.error):
+            return <ErrorsExplained title="There was a problem" error={parser.error} />;
+        case stage.has(parser.status, stage.invoked | stage.finished) && !!parser.component: {
+            const Component = parser.component;
             return (
                 <ErrorBoundary>
                     <Component />
                 </ErrorBoundary>
             );
         }
-        case (!invokation.component && invokation.status === stage.none) ||
-            stage.has(invokation.status, stage.finished):
+        case (!parser.component && parser.status === stage.none) ||
+            stage.has(parser.status, stage.finished):
         default:
             return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
     }
