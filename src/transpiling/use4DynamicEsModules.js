@@ -39,7 +39,7 @@ export default function use4DynamicEsModules(context, defaultEntry) {
     };
 
     useEffect(() => {
-        if (!!context) {
+        if (context) {
             render(context, defaultEntry);
         }
     }, [context, defaultEntry]);

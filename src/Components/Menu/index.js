@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import pkg from '../../../package.json';
 
 import './Menu.scss';
@@ -6,6 +6,8 @@ import './Menu.scss';
 import { GoMarkGithub } from 'react-icons/go';
 import { VscFiles, VscRefresh } from 'react-icons/vsc';
 import { FaCubes } from 'react-icons/fa';
+// I will implement the toggle for async | parallel processing
+// eslint-disable-next-line no-unused-vars
 import { AiFillCheckSquare, AiFillLinkedin } from 'react-icons/ai';
 
 import ProjStructure from './ProjStructure';

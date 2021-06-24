@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { extname } from 'path';
-import getKeyWithCount from './getKeywithCount';
+// TODO: check why I was working on this
+// import getKeyWithCount from './getKeywithCount';
 
 const enterKey = 13;
 const escapeKey = 27;

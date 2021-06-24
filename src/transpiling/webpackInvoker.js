@@ -4,6 +4,7 @@ import { tryResolve } from './helpers';
 import MissingModuleError from './MissingModuleError';
 import parseNShake from './parseNShake';
 
+// eslint-disable-next-line no-undef
 const customRequireImpl = function (use = __webpack_require__, dependencies, path) {
     let fullPath = tryResolve(dependencies, path);
 
@@ -88,12 +89,7 @@ function jsInvoke(context) {
             context.events.beforeInvoke(context);
         }
 
-        context.func(
-            context.unit,
-            context.unit.exports,
-            // eslint-disable-next-line no-undef
-            __webpack_require__,
-        );
+        context.func(context.unit, context.unit.exports, __webpack_require__);
 
         if (context.events && context.events.afterInvoke) {
             context.events.afterInvoke(context);

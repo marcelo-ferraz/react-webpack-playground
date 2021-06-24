@@ -10,7 +10,7 @@ export const pathFinder = (obj) => {
 
 export const findAllImports = (code, whenFound) => {
     const findImports =
-        /__customRequire\(__webpack_require__\,\s*\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
+        /__customRequire\(__webpack_require__,\s*\\?("|')(?<importId>\.\.?\/[\w.\s/-]+)\\?("|')/gm;
     let match;
 
     do {

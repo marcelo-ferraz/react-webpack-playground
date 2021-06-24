@@ -1,4 +1,4 @@
-import React, { Component, createRef, forwardRef } from 'react';
+import React, { Component, forwardRef } from 'react';
 import ErrorsExplained from './ErrorsExplained';
 
 const initial_state = {
@@ -6,7 +6,7 @@ const initial_state = {
     info: null,
 };
 
-export default React.forwardRef((props, ref) => {
+const ErrorsBoundary = (props, ref) => {
     class ErrorBoundariesImpl extends Component {
         constructor(props) {
             super(props);
@@ -39,4 +39,6 @@ export default React.forwardRef((props, ref) => {
     }
 
     return <ErrorBoundariesImpl {...props} />;
-});
+};
+
+export default forwardRef(ErrorsBoundary);

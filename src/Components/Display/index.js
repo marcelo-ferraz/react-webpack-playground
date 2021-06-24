@@ -6,7 +6,7 @@ import DisplayBody from './DynamicBody';
 
 import './display.scss';
 
-export default forwardRef(({ project, defaultPath }, ref) => {
+const Display = ({ project, defaultPath }, ref) => {
     const invokationRef = useRef();
     const boundariesRef = useRef();
 
@@ -18,7 +18,7 @@ export default forwardRef(({ project, defaultPath }, ref) => {
         if (boundariesRef.current.error) {
             boundariesRef.current.reset();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // TODO: this doesnt do anything, refactor it
     }, [invokationRef.current]);
 
     return (
@@ -49,4 +49,6 @@ export default forwardRef(({ project, defaultPath }, ref) => {
             </div>
         </div>
     );
-});
+};
+
+export default forwardRef(Display);

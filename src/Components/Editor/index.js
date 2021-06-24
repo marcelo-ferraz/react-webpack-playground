@@ -76,7 +76,9 @@ export default function Editor({ project = {}, onChange: triggerChange, onRename
                 </div>
             )),
         ];
-    }, [items, project.entries, triggerRename, selectedEntry]);
+        // ignore the references to those two functions, as if they arent cached, will make an inifinte loop
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [items, project.entries, triggerRename, selectedEntry /*, setSelectedEntry, selectEntry */]);
 
     const moveSelectedTab = useCallback(
         (direction) => {
@@ -98,7 +100,9 @@ export default function Editor({ project = {}, onChange: triggerChange, onRename
 
             setSelectedEntry(newSelected[0]);
         },
-        [items, selectedEntry],
+        // The use of that function here can cause an infinite loop if not cached
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [items, selectedEntry /*, setSelectedEntry*/],
     );
 
     return (

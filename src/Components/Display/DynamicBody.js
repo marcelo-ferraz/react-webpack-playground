@@ -4,7 +4,7 @@ import ErrorsExplained from './ErrorsExplained';
 import ErrorBoundary from './ErrorsBoundary';
 import stage from '../../transpiling/stage';
 
-const DisplayBody = forwardRef(({ context, defaultEntry }, ref) => {
+const DisplayBody = ({ context, defaultEntry }, ref) => {
     const invokation = use4DynamicEsModules(context, defaultEntry);
 
     useImperativeHandle(ref, () => invokation);
@@ -30,18 +30,20 @@ const DisplayBody = forwardRef(({ context, defaultEntry }, ref) => {
             );
         case stage.has(invokation.status, stage.error):
             return <ErrorsExplained title="There was a problem" error={invokation.error} />;
-        case stage.has(invokation.status, stage.invoked | stage.finished) && !!invokation.component:
+        case stage.has(invokation.status, stage.invoked | stage.finished) &&
+            !!invokation.component: {
             const Component = invokation.component;
             return (
                 <ErrorBoundary>
                     <Component />
                 </ErrorBoundary>
             );
+        }
         case (!invokation.component && invokation.status === stage.none) ||
             stage.has(invokation.status, stage.finished):
         default:
             return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
     }
-});
+};
 
-export default DisplayBody;
+export default forwardRef(DisplayBody);
