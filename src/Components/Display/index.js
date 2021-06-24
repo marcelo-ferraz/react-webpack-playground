@@ -14,13 +14,6 @@ const Display = ({ project, defaultPath }, ref) => {
         forceRefresh: invokationRef.current ? invokationRef.current.forceRefresh : () => {},
     }));
 
-    useEffect(() => {
-        if (boundariesRef.current.error) {
-            boundariesRef.current.reset();
-        }
-        // TODO: this doesnt do anything, refactor it
-    }, [invokationRef.current]);
-
     return (
         <div className="display columns">
             <div className="s-1-12 rows tools">
