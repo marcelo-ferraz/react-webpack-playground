@@ -1,31 +1,8 @@
-import { extname } from 'path';
 import { js, json, jsx } from '../fileExtensions';
-import { isItMeaningful } from './helpers';
+import { pathFinder } from './helpers';
 import { tryResolve } from './helpers';
 import MissingModuleError from './MissingModuleError';
-import transform2Js from './transform2Js';
-
-const byEqual =
-    (path) =>
-    ([key]) =>
-        key === path || key === `${path}.js` || key === `${path}/index.js`;
-
-const findByPath = (obj, path) => find(Object.entries(obj), byEqual(path)) || [];
-
-function findAllImports(code, whenFound) {
-    const findImports =
-        /__customRequire\(__webpack_require__\,\s*\\?("|')(?<importId>\.\.?\/[\w\.\s\/-]+)\\?("|')/gm;
-    let match;
-
-    do {
-        match = findImports.exec(code);
-
-        if (match && match.groups) {
-            const { importId } = match.groups;
-            whenFound(importId);
-        }
-    } while (match);
-}
+import parseNShake from './parseNShake';
 
 const customRequireImpl = function (use = __webpack_require__, dependencies, path) {
     let fullPath = tryResolve(dependencies, path);
@@ -67,17 +44,37 @@ const loadAllExtraDependencies = async ({ getExtraDependencies }) => {
     }, {});
 };
 
-const parserWorker = new Worker(new URL('../workers/parserWorker', import.meta.url));
+let parserWorker;
+const defaultEntryPath = './App';
 
-export const defaultEntryPath = './App.js';
+const getParserWorker = () => {
+    if (!parserWorker) {
+        if (!window.Worker) {
+            throw new Error('The browser doesnt support web workers');
+        }
 
-export async function render(strategy, entryPath = defaultEntryPath) {
-    parserWorker.postMessage([strategy.entries, entryPath]);
+        parserWorker = new Worker(new URL('../workers/parserWorker', import.meta.url));
+    }
+
+    return parserWorker;
+};
+
+async function renderHere(strategy, entryPath, finder) {
+    const jsFinder = finder || pathFinder(strategy.entries);
+
+    const es5Entries = parseNShake(jsFinder, entryPath || defaultEntryPath);
+
+    return await renderImpl(es5Entries, entryPath, strategy);
+}
+
+async function renderElsewhere(strategy, entryPath = defaultEntryPath) {
+    const worker = getParserWorker();
+    worker.postMessage([strategy.entries, entryPath]);
 
     return new Promise((resolve, reject) => {
-        parserWorker.onmessage = async ({ data: entries }) => {
+        worker.onmessage = async ({ data: entries }) => {
             try {
-                resolve(await renderImpl(entries, entryPath));
+                resolve(await renderImpl(entries, entryPath, strategy));
             } catch (e) {
                 reject(e);
             }
@@ -85,7 +82,7 @@ export async function render(strategy, entryPath = defaultEntryPath) {
     });
 }
 
-export function jsInvoke(context) {
+function jsInvoke(context) {
     if (context.func) {
         if (context.events && context.events.beforeInvoke) {
             context.events.beforeInvoke(context);
@@ -105,7 +102,7 @@ export function jsInvoke(context) {
     return context.unit;
 }
 
-async function renderImpl(entries, entryPath) {
+async function renderImpl(entries, entryPath, strategy) {
     let dynamicContext = null;
     let dependencies = {};
 
@@ -177,3 +174,5 @@ async function renderImpl(entries, entryPath) {
         return dynamicContext;
     }
 }
+
+export { renderHere, renderElsewhere, jsInvoke, defaultEntryPath };

@@ -1,6 +1,6 @@
 {
     "name": "react-webpack-playground",
-    "version": "1.0.0-parallel-parsing.38",
+    "version": "1.0.0-parallel-parsing.39",
     "description": "A playground",
     "main": "index.js",
     "module": "src/index.js",

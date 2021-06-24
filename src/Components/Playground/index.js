@@ -3,11 +3,13 @@ import Editor from '../Editor';
 import Display from '../Display';
 import contextReducer from '../../contextReducer';
 
-import { defaultEntryPath } from '../../parser/webpackInvoker';
+import { defaultEntryPath as transpilersDefaultEntryPath } from '../../transpiling/webpackInvoker';
 import Menu from '../Menu';
 import PlaygroundContext from '../../PlaygroundContext';
 
 import './Playground.scss';
+
+const defaultEntryPath = `${transpilersDefaultEntryPath}.js`;
 
 const defaultState = {
     entries: {
@@ -15,7 +17,7 @@ const defaultState = {
     },
 };
 
-export default function Playground({ lilProject, defaultPath = defaultEntryPath }) {
+export default function Playground({ lilProject, entryPath = defaultEntryPath }) {
     const [lilProj, dispatch] = useReducer(contextReducer, defaultState);
     const parser = useRef();
 
@@ -35,9 +37,9 @@ export default function Playground({ lilProject, defaultPath = defaultEntryPath 
     useEffect(() => {
         if (lilProject) {
             dispatch({ type: 'save-project', payload: lilProject });
-            setSelectedEntry(defaultPath);
+            setSelectedEntry(entryPath);
         }
-    }, [defaultPath, lilProject]);
+    }, [entryPath, lilProject]);
 
     return (
         <div className="playground rows">
@@ -52,7 +54,7 @@ export default function Playground({ lilProject, defaultPath = defaultEntryPath 
                     <Menu />
                 </div>
                 <div className="display-container">
-                    <Display project={lilProj} ref={parser} defaultPath={defaultPath} />
+                    <Display project={lilProj} ref={parser} defaultPath={entryPath} />
                 </div>
                 <div className="s-1 s-sm-1-2">
                     <Editor project={lilProj} onRename={renameEntry} onChange={saveEntry} />

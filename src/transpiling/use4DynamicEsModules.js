@@ -1,18 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
+import { pathFinder } from './helpers';
 
 import stage from './stage';
-import { render as webpackRender, jsInvoke, defaultEntryPath } from '../parser/webpackInvoker';
+import { renderElsewhere as webpackRender, jsInvoke, defaultEntryPath } from './webpackInvoker';
 
 export default function use4DynamicEsModules(context, defaultEntry) {
     const [status, setStatus] = useState(stage.none);
     const [error, setError] = useState();
     const invokedComponent = useRef();
 
-    const render = async (project, path = defaultEntryPath) => {
+    const render = async (project, entryPath = defaultEntryPath) => {
+        const finder = pathFinder(project.entries);
+        const [, entry] = finder(entryPath);
+
+        if (!entry) {
+            return;
+        }
+
         let phase = stage.rendering;
         try {
             setStatus(phase);
-            const ctx = await webpackRender(project, path);
+            const ctx = await webpackRender(project, entryPath, finder);
             if (!ctx) {
                 setStatus(stage.notInvoked | stage.finished);
                 invokedComponent.current = null;
