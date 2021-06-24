@@ -1,6 +1,6 @@
 export default class MissingModuleError extends TypeError {
-    constructor(msg, innerError) {
-        super(msg);
+    constructor(path, innerError) {
+        super(`Couldn't find a module for ${path}`);
         this.innerError = innerError;
     }
 }

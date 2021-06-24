@@ -47,7 +47,7 @@ function parseNShake(findBy, path, parsedNShaken = {}) {
             break;
         }
         default:
-            throw new TypeError(`The type "${type}" is not yet supported`);
+            throw new TypeNotSupportedError(type);
     }
 
     return parsedNShaken;

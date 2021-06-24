@@ -1,7 +1,7 @@
 import { js, json, jsx } from '../fileExtensions';
 import { pathFinder } from './helpers';
 import { tryResolve } from './helpers';
-import MissingModuleError from './MissingModuleError';
+import MissingModuleError from './errors/MissingModuleError';
 import parseNShake from './parseNShake';
 
 // eslint-disable-next-line no-undef
@@ -27,7 +27,7 @@ const customRequireImpl = function (use = __webpack_require__, dependencies, pat
     try {
         return use(path);
     } catch (error) {
-        throw new MissingModuleError(`Couldnt find a module for ${path}`, error);
+        throw new MissingModuleError(path, error);
     }
 };
 
