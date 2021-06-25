@@ -26,6 +26,7 @@ export default function use4DynamicEsModules(context, defaultEntry, mode = rende
 
             let phase = stage.rendering;
             try {
+                setError(null);
                 setStatus(phase);
                 const ctx = await webpackRender(project, entryPath, finder);
                 if (!ctx) {
@@ -40,6 +41,7 @@ export default function use4DynamicEsModules(context, defaultEntry, mode = rende
                 invokedComponent.current = exports.default;
                 setStatus(stage.invoked | stage.finished);
             } catch (err) {
+                debugger;
                 setError(err);
                 setStatus(phase | stage.error);
             }

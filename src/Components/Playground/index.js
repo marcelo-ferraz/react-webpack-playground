@@ -28,7 +28,7 @@ export default function Playground({ lilProject, entryPath = defaultEntryPath })
 
     const saveEntry = (key, value) => {
         dispatch({ type: 'save-entry', payload: { [key]: value } });
-        parser.current && parser.current.forceRefresh();
+        parser.forceRefresh();
     };
 
     const renameEntry = (oldKey, newKey) => {
@@ -55,7 +55,12 @@ export default function Playground({ lilProject, entryPath = defaultEntryPath })
                     <Menu />
                 </div>
                 <div className="display-container">
-                    <Display project={lilProj} parser={parser} defaultPath={entryPath} />
+                    <Display
+                        status={parser.status}
+                        component={parser.component}
+                        error={parser.error}
+                        onForceRefresh={parser.forceRefresh}
+                    />
                 </div>
                 <div className="s-1 s-sm-1-2">
                     <Editor project={lilProj} onRename={renameEntry} onChange={saveEntry} />

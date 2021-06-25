@@ -73,11 +73,18 @@ async function renderElsewhere(strategy, entryPath = defaultEntryPath) {
     worker.postMessage([strategy.entries, entryPath]);
 
     return new Promise((resolve, reject) => {
-        worker.onmessage = async ({ data: entries }) => {
-            try {
-                resolve(await renderImpl(entries, entryPath, strategy));
-            } catch (e) {
-                reject(e);
+        worker.onmessage = async ({ data }) => {
+            if (data.error) {
+                debugger;
+                reject(data.error);
+            }
+
+            if (data.es5Entries) {
+                try {
+                    resolve(await renderImpl(data.es5Entries, entryPath, strategy));
+                } catch (e) {
+                    reject(e);
+                }
             }
         };
     });

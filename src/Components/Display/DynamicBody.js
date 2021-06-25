@@ -1,45 +1,72 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import use4DynamicEsModules from '../../transpiling/use4DynamicEsModules';
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import ErrorsExplained from './ErrorsExplained';
 import ErrorBoundary from './ErrorsBoundary';
 import stage from '../../transpiling/stage';
 
-const DisplayBody = ({ parser }) => {
-    debugger;
-    switch (true) {
-        case parser.status === stage.rendering:
-            return <div>Rendering the code</div>;
-        case parser.status === stage.invoking:
-            return <div>Invoking the code</div>;
-        case stage.has(parser.status, stage.error | stage.rendering):
-            return (
-                <ErrorsExplained
-                    title="There was a problem during the rendering"
-                    error={parser.error}
-                />
-            );
-        case stage.has(parser.status, stage.error | stage.invoking):
-            return (
-                <ErrorsExplained
-                    title="There was a problem during the invoking of the module"
-                    error={parser.error}
-                />
-            );
-        case stage.has(parser.status, stage.error):
-            return <ErrorsExplained title="There was a problem" error={parser.error} />;
-        case stage.has(parser.status, stage.invoked | stage.finished) && !!parser.component: {
-            const Component = parser.component;
-            return (
-                <ErrorBoundary>
-                    <Component />
-                </ErrorBoundary>
-            );
+const DisplayBody = ({ status, error, component: Component }) => {
+    const errorsBoundaryRef = useRef();
+
+    const statusMessage = useMemo(() => {
+        let className = '';
+        let message = '';
+
+        if (stage.has(stage.error, status)) {
+            className = 'code-error';
+            message = 'There was an error!';
+        } else if (stage.has(stage.rendering, status)) {
+            className = 'code-rendering';
+            message = 'Rendering the code ...';
+        } else if (stage.has(stage.invoking, status)) {
+            className = 'code-invoking';
+            message = 'Invoking the code ...';
         }
-        case (!parser.component && parser.status === stage.none) ||
-            stage.has(parser.status, stage.finished):
-        default:
-            return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
-    }
+
+        return <div className={`message ${className}`}>{message}</div>;
+    }, [status]);
+
+    const boundComponent = useMemo(() => {
+        if (!Component) {
+            return <div className="empty-component">&lt; YOUR COMPONENT HERE /&gt;</div>;
+        }
+
+        return (
+            <ErrorBoundary ref={errorsBoundaryRef}>
+                <Component />
+            </ErrorBoundary>
+        );
+    }, [Component]);
+
+    const errors = useMemo(() => {
+        if (!stage.has(stage.error, status)) {
+            return null;
+        }
+
+        const title = stage.has(stage.rendering, status)
+            ? 'There was a problem during the rendering'
+            : stage.has(stage.invoking, status)
+            ? 'There was a problem during the invoking of the module'
+            : 'There was a problem';
+
+        return (
+            <div className="parsing-error">
+                <ErrorsExplained title={title} error={error} />
+            </div>
+        );
+    }, [error, status]);
+
+    useEffect(() => {
+        if (stage.has(stage.rendering, status) || stage.has(stage.invoking, status)) {
+            errorsBoundaryRef.current?.reset();
+        }
+    }, [status]);
+
+    return (
+        <>
+            {errors}
+            {boundComponent}
+            {statusMessage}
+        </>
+    );
 };
 
-export default forwardRef(DisplayBody);
+export default DisplayBody;
