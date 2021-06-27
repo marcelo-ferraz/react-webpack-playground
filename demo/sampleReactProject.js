@@ -9,7 +9,7 @@ import someData from './some_data.json';
 export default function App() {
     const [text, setText] = useState('Johnny');
 
-    return (<>
+    return (<div style={{ padding: '10px' }}>
         <JustAnOrdinaryContext.Provider value={{text, setText}}>
             <ThisOneUsesStylesAndContext />
             <div className="App">
@@ -22,7 +22,7 @@ export default function App() {
             
         <p>And from the json, this gif is from { someData.adverb } <b>{ someData.name }</b>.</p>
         <p>This one still is {someData.opinion}...</p>
-    </>);
+    </div>);
 }        
 `,
         './JustAnOrdinaryContext': `import {createContext} from "react"
