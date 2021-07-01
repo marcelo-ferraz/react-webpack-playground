@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 
 const stage = {
-    none: -1,
+    none: 0,
     rendering: 1,
     invoking: 1 << 1,
     invoked: 1 << 2,

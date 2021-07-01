@@ -2,7 +2,7 @@ export default function contextReducer(state, { type, payload }) {
     switch (type) {
         case 'save-project':
             return payload;
-        case 'rename-entry':
+        case 'rename-entry': {
             const { oldKey, newKey } = payload;
             const value = state.entries[oldKey];
             delete state.entries[oldKey];
@@ -13,6 +13,7 @@ export default function contextReducer(state, { type, payload }) {
                     [newKey]: value,
                 },
             };
+        }
         case 'save-entry':
             return {
                 ...state,

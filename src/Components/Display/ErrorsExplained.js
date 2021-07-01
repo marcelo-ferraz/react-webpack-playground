@@ -4,7 +4,7 @@ import './ErrorsExplained.scss';
 
 const maxLength = 1024;
 
-export default function ErrorsExplained({ error }) {
+export default function ErrorsExplained({ error = {} }) {
     return (
         <div className="errors-explained">
             {error.name && <h1 className="error-title">Error: &#34;{error.name}&#34;</h1>}

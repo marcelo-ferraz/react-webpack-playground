@@ -40,13 +40,6 @@ const getExternals = () => {
         umd: 'react-dom',
     };
 
-    const lodash = {
-        commonjs2: 'lodash',
-        commonjs: 'lodash',
-        amd: 'lodash',
-        root: '_',
-    };
-
     const reactAce = {
         commonjs2: 'react-ace',
         commonjs: 'react-ace',
@@ -61,7 +54,6 @@ const getExternals = () => {
 
     return {
         react,
-        lodash,
         'react-dom': reactDom,
 
         '@babel/standalone': standAloneBabel,

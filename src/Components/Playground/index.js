@@ -1,13 +1,17 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useMemo, useEffect, useReducer, useRef } from 'react';
+import debounce from 'lodash/debounce';
 import Editor from '../Editor';
 import Display from '../Display';
 import contextReducer from '../../contextReducer';
 
-import { defaultEntryPath } from '../../parser/webpackInvoker';
+import { defaultEntryPath as transpilersDefaultEntryPath } from '../../transpiling/webpackInvoker';
 import Menu from '../Menu';
 import PlaygroundContext from '../../PlaygroundContext';
 
 import './Playground.scss';
+import use4DynamicEsModules from '../../transpiling/use4DynamicEsModules';
+
+const defaultEntryPath = `${transpilersDefaultEntryPath}.js`;
 
 const defaultState = {
     entries: {
@@ -15,29 +19,41 @@ const defaultState = {
     },
 };
 
-export default function Playground({ lilProject, defaultPath = defaultEntryPath }) {
+const useForPlayground = (entryPath) => {
     const [lilProj, dispatch] = useReducer(contextReducer, defaultState);
-    const parser = useRef();
+    const parser = use4DynamicEsModules(lilProj, entryPath);
 
-    const setSelectedEntry = (entry) => {
-        dispatch({ type: 'set-selected-entry', payload: { entry } });
-    };
+    const actions = useMemo(
+        () => ({
+            saveEntry: (key, value) => {
+                dispatch({ type: 'save-entry', payload: { [key]: value } });
+            },
+            renameEntry: (oldKey, newKey) => {
+                dispatch({ type: 'rename-entry', payload: { oldKey, newKey } });
+            },
+            setSelectedEntry: (entry) => {
+                dispatch({ type: 'set-selected-entry', payload: { entry } });
+            },
+            saveProject: (project) => {
+                dispatch({ type: 'save-project', payload: project });
+            },
+        }),
+        [],
+    );
 
-    const saveEntry = (key, value) => {
-        dispatch({ type: 'save-entry', payload: { [key]: value } });
-        parser.current && parser.current.forceRefresh();
-    };
+    return [actions, lilProj, parser];
+};
 
-    const renameEntry = (oldKey, newKey) => {
-        dispatch({ type: 'rename-entry', payload: { oldKey, newKey } });
-    };
+export default function Playground({ lilProject, entryPath = defaultEntryPath }) {
+    const [actions, lilProj, parser] = useForPlayground(entryPath);
 
     useEffect(() => {
         if (lilProject) {
-            dispatch({ type: 'save-project', payload: lilProject });
-            setSelectedEntry(defaultPath);
+            actions.saveProject(lilProject);
+            actions.setSelectedEntry(entryPath);
         }
-    }, [defaultPath, lilProject]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [entryPath, lilProject]);
 
     return (
         <div className="playground rows">
@@ -45,17 +61,26 @@ export default function Playground({ lilProject, defaultPath = defaultEntryPath 
                 value={{
                     currentProject: lilProj,
                     selectedEntry: lilProj.selectedEntry,
-                    setSelectedEntry,
+                    setSelectedEntry: actions.setSelectedEntry,
                 }}
             >
                 <div className="side-menu-container">
                     <Menu />
                 </div>
                 <div className="display-container">
-                    <Display project={lilProj} ref={parser} defaultPath={defaultPath} />
+                    <Display
+                        status={parser.status}
+                        component={parser.component}
+                        error={parser.error}
+                        onForceRefresh={parser.forceRefresh}
+                    />
                 </div>
                 <div className="s-1 s-sm-1-2">
-                    <Editor project={lilProj} onRename={renameEntry} onChange={saveEntry} />
+                    <Editor
+                        project={lilProj}
+                        onRename={actions.renameEntry}
+                        onChange={actions.saveEntry}
+                    />
                 </div>
             </PlaygroundContext.Provider>
         </div>

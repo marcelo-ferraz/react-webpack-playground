@@ -1,47 +1,73 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import use4DynamicEsModules from '../../parser/use4DynamicEsModules';
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import ErrorsExplained from './ErrorsExplained';
 import ErrorBoundary from './ErrorsBoundary';
-import stage from '../../parser/stage';
+import stage from '../../transpiling/stage';
 
-const DisplayBody = forwardRef(({ context, defaultEntry }, ref) => {
-    const invokation = use4DynamicEsModules(context, defaultEntry);
+const DisplayBody = ({ status, error, component: Component }) => {
+    const errorsBoundaryRef = useRef();
 
-    useImperativeHandle(ref, () => invokation);
+    const statusMessage = useMemo(() => {
+        let className = '';
+        let message = '';
 
-    switch (true) {
-        case invokation.status === stage.rendering:
-            return <div>Rendering the code</div>;
-        case invokation.status === stage.invoking:
-            return <div>Invoking the code</div>;
-        case stage.has(invokation.status, stage.error | stage.rendering):
-            return (
-                <ErrorsExplained
-                    title="There was a problem during the rendering"
-                    error={invokation.error}
-                />
-            );
-        case stage.has(invokation.status, stage.error | stage.invoking):
-            return (
-                <ErrorsExplained
-                    title="There was a problem during the invoking of the module"
-                    error={invokation.error}
-                />
-            );
-        case stage.has(invokation.status, stage.error):
-            return <ErrorsExplained title="There was a problem" error={invokation.error} />;
-        case stage.has(invokation.status, stage.invoked | stage.finished) && !!invokation.component:
-            const Component = invokation.component;
-            return (
-                <ErrorBoundary>
-                    <Component />
-                </ErrorBoundary>
-            );
-        case (!invokation.component && invokation.status === stage.none) ||
-            stage.has(invokation.status, stage.finished):
-        default:
-            return <div>&lt; YOUR COMPONENT HERE /&gt;</div>;
-    }
-});
+        if (stage.has(stage.error, status)) {
+            className = 'code-error';
+            message = 'There was an error!';
+        } else if (stage.has(stage.rendering, status)) {
+            className = 'code-rendering';
+            message = 'Rendering the code ...';
+        } else if (stage.has(stage.invoking, status)) {
+            className = 'code-invoking';
+            message = 'Invoking the code ...';
+        }
+
+        return <div className={`message ${className}`}>{message}</div>;
+    }, [status]);
+
+    const boundComponent = useMemo(() => {
+        if (!Component) {
+            return <div className="empty-component">&lt; YOUR COMPONENT HERE /&gt;</div>;
+        }
+
+        return (
+            <ErrorBoundary ref={errorsBoundaryRef}>
+                <Component />
+            </ErrorBoundary>
+        );
+    }, [Component]);
+
+    const errors = useMemo(() => {
+        if (!stage.has(stage.error, status)) {
+            return null;
+        }
+
+        const title = stage.has(stage.rendering, status)
+            ? 'There was a problem during the rendering'
+            : stage.has(stage.invoking, status)
+            ? 'There was a problem during the invoking of the module'
+            : 'There was a problem';
+
+        return (
+            <div className="parsing-error">
+                <ErrorsExplained title={title} error={error} />
+            </div>
+        );
+    }, [error, status]);
+
+    useEffect(() => {
+        const isWorking = stage.has(stage.rendering, status) || stage.has(stage.invoking, status);
+        if (isWorking && errorsBoundaryRef.current?.error) {
+            errorsBoundaryRef.current?.reset();
+        }
+    }, [status]);
+
+    return (
+        <>
+            {errors}
+            {boundComponent}
+            {statusMessage}
+        </>
+    );
+};
 
 export default DisplayBody;

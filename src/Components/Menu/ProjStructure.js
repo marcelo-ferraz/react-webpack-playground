@@ -5,37 +5,37 @@ import {
     AiOutlineFile,
     AiOutlineFolder,
     AiOutlineFolderOpen,
-    AiFillCheckSquare,
-    AiOutlineBorder,
-    AiOutlineDoubleRight,
+    // AiFillCheckSquare,
+    // AiOutlineBorder,
+    // AiOutlineDoubleRight,
 } from 'react-icons/ai';
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact } from 'react-icons/di';
-import { GoPencil } from 'react-icons/go';
-
-import { MdArrowForward, MdLabel, MdLabelOutline } from 'react-icons/md';
+// import { GoPencil } from 'react-icons/go';
+// import { FaChevronRight } from 'react-icons/fa';
+import { /*MdArrowForward, */ MdLabel /*MdLabelOutline*/ } from 'react-icons/md';
 
 import { extname } from 'path';
 
 import './ProjStructure.scss';
 import PlaygroundContext from '../../PlaygroundContext';
-import { FaChevronRight } from 'react-icons/fa';
 import CheckBox from '../Checkbox';
+import { css, html, js, json, jsx } from '../../fileExtensions';
 
 const getFileIcon = (filename) => {
     const ext = extname(filename);
-    if (!ext || ext === '.js') {
+    if (!ext || ext === js) {
         return <DiJavascript1 />;
     }
-    if (ext === '.css') {
+    if (ext === css) {
         return <DiCss3Full />;
     }
-    if (ext === '.html') {
+    if (ext === html) {
         return <DiHtml5 />;
     }
-    if (ext === '.jsx') {
+    if (ext === jsx) {
         return <DiReact />;
     }
-    if (ext === '.json') {
+    if (ext === json) {
         return <VscJson />;
     }
     return <AiOutlineFile />;
@@ -68,6 +68,7 @@ function TreeItem({ name, entries }) {
                 }
                 return <TreeItem key={`dir-${itemKey}`} name={itemKey} entries={value} />;
             }),
+        [entries, selectedEntry, setSelectedEntry],
     );
 
     return (

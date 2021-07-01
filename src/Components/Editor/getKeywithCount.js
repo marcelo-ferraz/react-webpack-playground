@@ -1,4 +1,4 @@
-import path, { extname } from 'path';
+import { extname } from 'path';
 
 export default function getKeyWithCount(obj, path, extension = '', count = 0) {
     let ext = extension;

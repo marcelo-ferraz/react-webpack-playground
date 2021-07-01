@@ -1,15 +1,11 @@
-import React from 'react';
-import { render as testRender } from '@testing-library/react';
-import cases from 'jest-in-case';
 import { jsInvoke, render } from '../webpackInvoker';
-import { resolve, isItMeaningful } from '../helpers';
 import sumAsDefaultOnlyMock from '../__mocks__/sumAsDefaultOnly.mock';
 import sumAsDefaultAndSubtractionMock from '../__mocks__/sumAsDefaultAndSubtraction.mock';
 import sumAndSubtractionNoDefaultMock from '../__mocks__/sumAndSubtractionNoDefault';
 import sumAndSubtractionFromOtherModulesMock from '../__mocks__/sumAndSubtractionFromOtherModules.mock ';
 import sumAsDefaultImportingMultipleLevelsMock from '../__mocks__/sumAsDefaultImportingMultipleLevels.mock';
 
-global.__webpack_require__ = function (id) {};
+global.__webpack_require__ = function () {};
 global.__webpack_require__.m = [{ './node_modules/react': {} }];
 
 describe('webpackInvoker', () => {

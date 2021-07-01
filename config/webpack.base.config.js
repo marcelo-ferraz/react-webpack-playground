@@ -1,4 +1,3 @@
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 // eslint-disable-next-line no-unused-vars
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -64,9 +63,5 @@ module.exports = {
     },
     plugins: [
         // new BundleAnalyzerPlugin(),
-        new LodashModuleReplacementPlugin({
-            collections: true,
-            paths: true,
-        }),
     ],
 };

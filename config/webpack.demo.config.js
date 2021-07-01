@@ -20,7 +20,7 @@ module.exports = (_, argv) => ({
     entry: path.resolve(process.cwd(), './demo/index'),
     output: getOutput(),
     devServer: {
-        contentBase: './dist',
+        contentBase: path.join(process.cwd(), 'dist'),
         hot: true,
         open: true,
     },
