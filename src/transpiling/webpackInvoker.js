@@ -75,7 +75,6 @@ async function renderElsewhere(strategy, entryPath = defaultEntryPath) {
     return new Promise((resolve, reject) => {
         worker.onmessage = async ({ data }) => {
             if (data.error) {
-                debugger;
                 reject(data.error);
             }
 

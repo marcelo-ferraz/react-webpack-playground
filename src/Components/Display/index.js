@@ -10,8 +10,8 @@ const Display = ({ onForceRefresh, status, error, component }) => {
     const boundariesRef = useRef();
 
     useEffect(() => {
-        if (stage.has(stage.rendering, status) || stage.has(stage.invoking, status)) {
-            debugger;
+        const isWorking = stage.has(stage.rendering, status) || stage.has(stage.invoking, status);
+        if (isWorking && boundariesRef.current?.error) {
             boundariesRef.current?.reset();
         }
     }, [status]);

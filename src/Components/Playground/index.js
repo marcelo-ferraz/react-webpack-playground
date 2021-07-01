@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useMemo, useEffect, useReducer, useRef } from 'react';
+import debounce from 'lodash/debounce';
 import Editor from '../Editor';
 import Display from '../Display';
 import contextReducer from '../../contextReducer';
@@ -18,28 +19,40 @@ const defaultState = {
     },
 };
 
-export default function Playground({ lilProject, entryPath = defaultEntryPath }) {
+const useForPlayground = (entryPath) => {
     const [lilProj, dispatch] = useReducer(contextReducer, defaultState);
     const parser = use4DynamicEsModules(lilProj, entryPath);
 
-    const setSelectedEntry = (entry) => {
-        dispatch({ type: 'set-selected-entry', payload: { entry } });
-    };
+    const actions = useMemo(
+        () => ({
+            saveEntry: (key, value) => {
+                dispatch({ type: 'save-entry', payload: { [key]: value } });
+            },
+            renameEntry: (oldKey, newKey) => {
+                dispatch({ type: 'rename-entry', payload: { oldKey, newKey } });
+            },
+            setSelectedEntry: (entry) => {
+                dispatch({ type: 'set-selected-entry', payload: { entry } });
+            },
+            saveProject: (project) => {
+                dispatch({ type: 'save-project', payload: project });
+            },
+        }),
+        [],
+    );
 
-    const saveEntry = (key, value) => {
-        dispatch({ type: 'save-entry', payload: { [key]: value } });
-        parser.forceRefresh();
-    };
+    return [actions, lilProj, parser];
+};
 
-    const renameEntry = (oldKey, newKey) => {
-        dispatch({ type: 'rename-entry', payload: { oldKey, newKey } });
-    };
+export default function Playground({ lilProject, entryPath = defaultEntryPath }) {
+    const [actions, lilProj, parser] = useForPlayground(entryPath);
 
     useEffect(() => {
         if (lilProject) {
-            dispatch({ type: 'save-project', payload: lilProject });
-            setSelectedEntry(entryPath);
+            actions.saveProject(lilProject);
+            actions.setSelectedEntry(entryPath);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entryPath, lilProject]);
 
     return (
@@ -48,7 +61,7 @@ export default function Playground({ lilProject, entryPath = defaultEntryPath })
                 value={{
                     currentProject: lilProj,
                     selectedEntry: lilProj.selectedEntry,
-                    setSelectedEntry,
+                    setSelectedEntry: actions.setSelectedEntry,
                 }}
             >
                 <div className="side-menu-container">
@@ -63,7 +76,11 @@ export default function Playground({ lilProject, entryPath = defaultEntryPath })
                     />
                 </div>
                 <div className="s-1 s-sm-1-2">
-                    <Editor project={lilProj} onRename={renameEntry} onChange={saveEntry} />
+                    <Editor
+                        project={lilProj}
+                        onRename={actions.renameEntry}
+                        onChange={actions.saveEntry}
+                    />
                 </div>
             </PlaygroundContext.Provider>
         </div>

@@ -55,7 +55,8 @@ const DisplayBody = ({ status, error, component: Component }) => {
     }, [error, status]);
 
     useEffect(() => {
-        if (stage.has(stage.rendering, status) || stage.has(stage.invoking, status)) {
+        const isWorking = stage.has(stage.rendering, status) || stage.has(stage.invoking, status);
+        if (isWorking && errorsBoundaryRef.current?.error) {
             errorsBoundaryRef.current?.reset();
         }
     }, [status]);
