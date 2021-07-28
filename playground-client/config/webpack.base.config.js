@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const path = require('path');
+const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin');
 
 const jsRule = {
     test: /\.jsx?$/i,
@@ -61,7 +63,14 @@ module.exports = {
             path: require.resolve('path-browserify'),
         },
     },
+    experiments: {
+        asyncWebAssembly: true,
+    },
     plugins: [
         // new BundleAnalyzerPlugin(),
+        new WasmPackPlugin({
+            outDir: path.resolve(__dirname, '../../playground-client/rs-parser'),
+            crateDirectory: path.resolve(__dirname, '../../parser'),
+        }),
     ],
 };
