@@ -31,18 +31,12 @@ function parseNShake(findBy, path, parsedNShaken = {}) {
                 });
             }
 
-            parsedNShaken[id] = {
-                ext: type || '.js',
-                code,
-            };
+            parsedNShaken[id] = [code, type || '.js'];
 
             break;
         }
         case json: {
-            parsedNShaken[path] = {
-                ext: '.json',
-                code: JSON.parse(rawCode),
-            };
+            parsedNShaken[path] = [JSON.parse(rawCode), '.json'];
 
             break;
         }

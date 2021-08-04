@@ -1,7 +1,7 @@
 mod parser;
 
 use std::collections::HashMap;
-use wasm_bindgen::{JsValue, prelude::*};
+use wasm_bindgen::{prelude::*};
 use js_sys::Map;
 
 use parser::Parser;

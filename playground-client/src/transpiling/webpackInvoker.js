@@ -3,6 +3,7 @@ import { pathFinder } from './helpers';
 import { tryResolve } from './helpers';
 import MissingModuleError from './errors/MissingModuleError';
 import parseNShake from './parseNShake';
+import { initWorker } from '../workers/parserWorker';
 
 // eslint-disable-next-line no-undef
 const customRequireImpl = function (use = __webpack_require__, dependencies, path) {
@@ -79,6 +80,7 @@ async function renderElsewhere(strategy, entryPath = defaultEntryPath) {
             }
 
             if (data.es5Entries) {
+                debugger;
                 try {
                     resolve(await renderImpl(data.es5Entries, entryPath, strategy));
                 } catch (e) {
@@ -123,9 +125,9 @@ async function renderImpl(entries, entryPath, strategy) {
     dependencies = { ...dependencies, ...extraDependencies };
 
     for (const [path, entry] of Object.entries(entries)) {
-        const { ext, code } = entry;
+        const [code, ext] = entry;
         const unit = { i: `dynamic:${path}`, l: false, exports: {} };
-
+        debugger;
         if (!code) {
             continue;
         }

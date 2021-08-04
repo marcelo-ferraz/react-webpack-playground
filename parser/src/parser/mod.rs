@@ -1,10 +1,15 @@
 mod helpers;
 mod cached_code;
 
+use core::panic;
 use std::{cell::{Ref, RefCell, RefMut}, collections::HashMap};
 use cached_code::CachedCodeItem;
 use helpers::{get_ext, find_imports, find_by_path, react_js_transform};
 use cached_code::CachedCode;
+use lazy_static::lazy_static;
+use regex::Regex;
+
+use crate::parser::helpers::log;
 
 pub struct Parser {
     cache: RefCell<HashMap<String, CachedCodeItem>> 
@@ -17,38 +22,35 @@ impl Parser {
         } 
     }
     
-    pub fn parse_and_shake(&self, entries: &HashMap<String, String>, path: &str) -> Option<HashMap<String, String>> {
-        let mut result: HashMap<String, String> = HashMap::new();
+    pub fn parse_and_shake<'a>(&self, entries: &HashMap<String, String>, path: &str) -> Option<HashMap<String, (String, String)>> {
+        let mut result: HashMap<String, (String, String)> = HashMap::new();
 
         self.search_entries_within(path, &entries, &mut result);
         
         Some(result)
     }
-    
-    fn transform_js(&self, path: &str, value: &str, ext: &str) -> String {
-        let parsed_value;
-        match self.get_from_cache(path) {
-            Some(cached) => {
-                let cached_value = cached.1;
-                let same_len = value.len() == cached_value.raw.len();
-                let same_val = value == cached_value.raw;
 
-                if same_len && same_val {
-                    parsed_value = cached_value.transpiled.clone();
-                } else {
-                    parsed_value = react_js_transform(value);
-                    self.add_to_cache(path, value.to_string(), parsed_value.clone(), ext);
-                }
-            },
-            None => {
-                parsed_value = react_js_transform(value);
-                self.add_to_cache(path, value.to_string(), parsed_value.clone(), ext);
-            },
+    fn transform_js(&self, path: &str, value: &str, ext: &str) -> String {
+        lazy_static!{ 
+            static ref REQ_REG: Regex = Regex::new(r#"require\("#).unwrap();
         }
-        parsed_value
+        
+        self.get_from_cache_or_transform(
+
+            path, value, ext, move || {
+                let transformed = react_js_transform(value);
+
+                format!(
+                    "(function(module, exports, __webpack_require__) {{ {} }})", 
+                    REQ_REG.replace_all(&transformed, "__customRequire(__webpack_require__, "),
+                )
+            }
+        )
     }
 
-    fn search_entries_within<'a>(&self, path: &'a str, entries: &'a HashMap<String, String>, result:&'a mut HashMap<String, String>) -> &'a mut HashMap<String, String> {
+    fn search_entries_within<'a>(
+        &self, path: &'a str, entries: &'a HashMap<String, String>, result: &'a mut HashMap<String, (String, String)>
+    ) -> &'a mut HashMap<String, (String, String)> {
         if result.contains_key(path) {()}
 
         if let Some(value) = find_by_path(entries, path) {
@@ -58,15 +60,16 @@ impl Parser {
 
             let ext = get_ext(path).unwrap_or(".js");
 
-            let parsed_value = match ext {
+            let transformed = match ext {
                 ".js" | ".jsx" => self.transform_js(path, value, ext),
                 ".ts" | ".tsx" => todo!("to be implemented"),
                 ".scss" => todo!("to be implemented"),
                 ".css" => todo!("to be implemented"),
-                &_ => value.to_string()
+                ".json" => value.to_string(),
+                &_ => panic!("Unexpected type of file \"{}\"", ext)
             };
             
-            result.insert(path.to_string(), parsed_value.clone());
+            result.insert(path.to_string(), (transformed, ext.to_string()));
             
             find_imports(&value).for_each(|import| {
                 self.search_entries_within(import, entries, result);

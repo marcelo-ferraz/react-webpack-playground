@@ -6,7 +6,11 @@ import renderMode from './renderMode';
 import { renderElsewhere, renderHere, jsInvoke, defaultEntryPath } from './webpackInvoker';
 import debounce from 'lodash.debounce';
 
-export default function use4DynamicEsModules(context, defaultEntry, mode = renderMode.inline) {
+export default function use4DynamicEsModules(
+    context,
+    defaultEntry,
+    mode = renderMode.parallel /*inline*/,
+) {
     const [status, setStatus] = useState(stage.none);
     const [error, setError] = useState();
     const invokedComponent = useRef();
