@@ -69,6 +69,7 @@ module.exports = {
     plugins: [
         // new BundleAnalyzerPlugin(),
         new WasmPackPlugin({
+            forceMode: 'production',
             outDir: path.resolve(__dirname, '../../playground-client/rs-parser'),
             crateDirectory: path.resolve(__dirname, '../../parser'),
         }),

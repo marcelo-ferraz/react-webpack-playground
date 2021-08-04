@@ -1,0 +1,25 @@
+{
+	"name": "react-webpack-playground",
+	"description": "A playground for react development",
+	"main": "index.js",
+	"module": "playground-client/src/index.js",
+	"files": [
+		"dist/**/*"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/marcelo-ferraz/react-webpack-playground"
+	},
+	"scripts": {
+		"lint": "npm run lint --prefix playground-client",
+		"lint:fix": "npm run lint:fix --prefix playground-client",
+		"build": "npm run build --prefix playground-client",
+		"build:release": "npm run build:release --prefix playground-client",
+		"build:watch": "npm run build:watch --prefix playground-client",
+		"build:demo": "npm run build:demo --prefix playground-client",
+		"start": "npm run start --prefix playground-client",
+		"up:version": "npm run up:version --prefix playground-client"
+	},
+	"author": "marcelo-ferraz <marcelosfm@gmail.com> (https://github.com/marcelo-ferraz/)",
+	"license": "ISC"
+}
