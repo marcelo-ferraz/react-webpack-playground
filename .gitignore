@@ -33,3 +33,4 @@ test-report.json
 junit.xml
 
 target
+parser/src/bkp-ex/
