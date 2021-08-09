@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"jsx": "react",
+		"module": "commonjs",
+		"target": "es2016",
+		"checkJs": false
+	},
+	"exclude": [
+		"playground-client/node_modules",
+		"playground-client/dist",
+		"parser",
+		"playground-client/rs-parser",
+		".vscode"
+	],
+	"include": ["playground-client/src"]
+}
